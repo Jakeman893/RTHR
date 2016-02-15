@@ -23,15 +23,9 @@
     <ClCompile Include="Common\DeviceResources.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClInclude Include="Content\Sample3DSceneRenderer.h">
-      <Filter>Content</Filter>
-    </ClInclude>
     <ClInclude Include="Content\ShaderStructures.h">
       <Filter>Content</Filter>
     </ClInclude>
-    <ClCompile Include="Content\Sample3DSceneRenderer.cpp">
-      <Filter>Content</Filter>
-    </ClCompile>
     <Filter Include="Content\Shaders">
       <UniqueIdentifier>{0c57bb37-1805-4f2a-93c9-5815f9b7b15d}</UniqueIdentifier>
       <Extensions>.hlsl</Extensions>
@@ -45,13 +39,28 @@
     <Filter Include="Assets\Textures">
       <UniqueIdentifier>{d8611d51-ea71-4e90-944e-ee37c1d82355}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Content\FPS Text Renderer">
+      <UniqueIdentifier>{f5ed7a72-0db7-41e4-89be-de8b73426a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Background Scene">
+      <UniqueIdentifier>{e8d5c965-ab19-41c5-b16a-e847c3e7bd65}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content\Hair Strand Render">
+      <UniqueIdentifier>{626c2101-d357-49c3-baa9-eb584a316702}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="App.cpp" />
     <ClCompile Include="RTHRMain.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Content\FpsTextRenderer.cpp">
-      <Filter>Content</Filter>
+      <Filter>Content\FPS Text Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\Sample3DSceneRenderer.cpp">
+      <Filter>Content\Background Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\StrandRenderer.cpp">
+      <Filter>Content\Hair Strand Render</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -59,7 +68,13 @@
     <ClInclude Include="RTHRMain.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Content\FpsTextRenderer.h">
-      <Filter>Content</Filter>
+      <Filter>Content\FPS Text Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\Sample3DSceneRenderer.h">
+      <Filter>Content\Background Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\StrandRenderer.h">
+      <Filter>Content\Hair Strand Render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -100,7 +115,10 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <MeshContentTask Include="Assets\Models\Head.fbx">
+    <MeshContentTask Include="Assets\Models\Triangle.fbx">
+      <Filter>Assets\Models</Filter>
+    </MeshContentTask>
+    <MeshContentTask Include="Assets\Models\Basehead.fbx">
       <Filter>Assets\Models</Filter>
     </MeshContentTask>
   </ItemGroup>
