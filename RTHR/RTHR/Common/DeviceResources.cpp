@@ -144,8 +144,8 @@ void DX::DeviceResources::CreateDeviceResources()
 	// description.  All applications are assumed to support 9.1 unless otherwise stated.
 	D3D_FEATURE_LEVEL featureLevels[] =
 	{
-		D3D_FEATURE_LEVEL_12_1,
-		D3D_FEATURE_LEVEL_12_0,
+		//D3D_FEATURE_LEVEL_12_1,
+		//D3D_FEATURE_LEVEL_12_0,
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0
 	};
@@ -229,6 +229,13 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 
 	UpdateRenderTargetSize();
 
+	UINT m4xMsaaQuality;
+
+	ThrowIfFailed(m_d3dDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_B8G8R8A8_UNORM, 4, &m4xMsaaQuality));
+	assert(m4xMsaaQuality > 0);
+
+	bool Use4xMsaa = m4xMsaaQuality > 1;
+
 	// The width and height of the swap chain must be based on the window's
 	// natively-oriented width and height. If the window is not in the native
 	// orientation, the dimensions must be reversed.
@@ -281,6 +288,19 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		swapChainDesc.Flags = 0;
 		swapChainDesc.Scaling = scaling;
 		swapChainDesc.AlphaMode = DXGI_ALPHA_MODE_IGNORE;
+
+		if (Use4xMsaa)
+		{
+			swapChainDesc.SampleDesc.Count = 4;
+
+			//m4xMSAAQuality returned via CheckMultisampleQualityLevels()
+			swapChainDesc.SampleDesc.Quality = m4xMsaaQuality - 1;
+		}
+		else
+		{
+			swapChainDesc.SampleDesc.Count = 1;
+			swapChainDesc.SampleDesc.Quality = 0;
+		}
 
 		// This sequence obtains the DXGI factory that was used to create the Direct3D device above.
 		ComPtr<IDXGIDevice3> dxgiDevice;
@@ -384,6 +404,18 @@ void DX::DeviceResources::CreateWindowSizeDependentResources()
 		1, // Use a single mipmap level.
 		D3D11_BIND_DEPTH_STENCIL
 		);
+
+	///Use 4xMSAA? --must match swap chain MSAA values
+	if (Use4xMsaa)
+	{
+		depthStencilDesc.SampleDesc.Count = 4;
+		depthStencilDesc.SampleDesc.Quality = m4xMsaaQuality - 1;
+	}
+	else
+	{
+		depthStencilDesc.SampleDesc.Count = 1;
+		depthStencilDesc.SampleDesc.Quality = 0;
+	}
 
 	ComPtr<ID3D11Texture2D1> depthStencil;
 	DX::ThrowIfFailed(
