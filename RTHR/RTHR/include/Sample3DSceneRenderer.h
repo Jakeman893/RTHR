@@ -1,8 +1,8 @@
 ﻿#pragma once
 
-#include "..\Common\DeviceResources.h"
-#include "ShaderStructures.h"
-#include "..\Common\StepTimer.h"
+#include "Common\DeviceResources.h"
+#include "Common\ShaderStructures.h"
+#include "Common\StepTimer.h"
 
 namespace RTHR
 {

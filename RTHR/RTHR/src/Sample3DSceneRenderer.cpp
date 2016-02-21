@@ -1,7 +1,7 @@
 ﻿#include "pch.h"
 #include "Sample3DSceneRenderer.h"
 
-#include "..\Common\DirectXHelper.h"
+#include "Common\DirectXHelper.h"
 
 using namespace RTHR;
 

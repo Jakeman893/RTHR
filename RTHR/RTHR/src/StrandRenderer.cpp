@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "StrandRenderer.h"
 
-#include "..\Common\DirectXHelper.h"
+#include "Common\DirectXHelper.h"
 
 using namespace RTHR;
 
@@ -23,8 +23,8 @@ StrandRenderer::StrandRenderer(const std::shared_ptr<DX::DeviceResources>& devic
 void StrandRenderer::CreateDeviceDependentResources()
 {
 	//Load shaders asynchronously
-	auto loadVSTask = DX::ReadDataAsync(L"");
-	auto loadPSTask = DX::ReadDataAsync(L"");
+	auto loadVSTask = DX::ReadDataAsync(L"HairVertexShader.cso");
+	auto loadPSTask = DX::ReadDataAsync(L"HairPixelShader.cso");
 
 	// Once file is loaded, create shader and input layout.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData)
@@ -79,6 +79,47 @@ void StrandRenderer::CreateDeviceDependentResources()
 	// Once both shaders are loaded, create the mesh.
 	auto createMeshTask = (createPSTask && createVSTask).then([this]() {
 
+		// Load mesh vertices. In this case, just a single strand
+		static const VertexPositionColor lineVertices[] =
+		{
+			{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(0.0f, 0.0f, 0.0f)},
+			{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+			{ XMFLOAT3(-0.5f, -0.5f, -0.5f), XMFLOAT3(2.0f, 0.0f, 0.0f) },
+		};
+
+		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 };
+		vertexBufferData.pSysMem = lineVertices;
+		vertexBufferData.SysMemPitch = 0;
+		vertexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC vertexBufferDesc(sizeof(lineVertices), D3D11_BIND_VERTEX_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&vertexBufferDesc,
+				&vertexBufferData,
+				&m_vertexBuffer
+				)
+			);
+
+		static const unsigned short lineIndices[] =
+		{
+			0,1,
+			1,2,
+		};
+
+		m_indexCount = ARRAYSIZE(lineIndices);
+
+		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+		indexBufferData.pSysMem = lineIndices;
+		indexBufferData.SysMemPitch = 0;
+		indexBufferData.SysMemSlicePitch = 0;
+		CD3D11_BUFFER_DESC indexBufferDesc(sizeof(lineIndices), D3D11_BIND_INDEX_BUFFER);
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateBuffer(
+				&indexBufferDesc,
+				&indexBufferData,
+				&m_indexBuffer
+				)
+			);
 	});
 
 	// Once mesh is loaded, object is ready to be rendered.
@@ -177,7 +218,7 @@ void StrandRenderer::Render()
 		0
 		);
 
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	context->IASetInputLayout(m_inputLayout.Get());
 
