@@ -231,6 +231,12 @@
     <None Include="RTHR_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\HairPixelShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairVertexShader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">
       <ShaderType>Pixel</ShaderType>
     </FxCompile>

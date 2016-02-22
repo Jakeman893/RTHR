@@ -131,6 +131,8 @@
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
       <Filter>Content\Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\HairPixelShader.hlsl" />
+    <FxCompile Include="Shaders\HairVertexShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\Models\Triangle.fbx">
