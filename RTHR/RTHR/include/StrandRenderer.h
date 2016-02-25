@@ -26,6 +26,7 @@ namespace RTHR
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_indexBuffer;
 		Microsoft::WRL::ComPtr<ID3D11VertexShader>	m_vertexShader;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader>	m_pixelShader;
+		Microsoft::WRL::ComPtr<ID3D11GeometryShader> m_geometryShader;
 		Microsoft::WRL::ComPtr<ID3D11Buffer>		m_constantBuffer;
 
 		// System resources for geometry.

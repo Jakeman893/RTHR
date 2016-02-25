@@ -133,6 +133,7 @@
     </FxCompile>
     <FxCompile Include="Shaders\HairPixelShader.hlsl" />
     <FxCompile Include="Shaders\HairVertexShader.hlsl" />
+    <FxCompile Include="Shaders\HairGeometryShader.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <MeshContentTask Include="Assets\Models\Triangle.fbx">

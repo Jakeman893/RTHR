@@ -145,6 +145,7 @@ void StrandRenderer::CreateDeviceDependentResources()
 	//Load shaders asynchronously
 	auto loadVSTask = DX::ReadDataAsync(L"HairVertexShader.cso");
 	auto loadPSTask = DX::ReadDataAsync(L"HairPixelShader.cso");
+	auto loadGSTask = DX::ReadDataAsync(L"HairGeometryShader.cso");
 
 	// Once file is loaded, create shader and input layout.
 	auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData)
@@ -203,15 +204,30 @@ void StrandRenderer::CreateDeviceDependentResources()
 			);
 	});
 
+	auto createGSTask = loadGSTask.then([this](const std::vector<byte>& fileData) {
+		// Creates the geometry shader on the GPU
+		DX::ThrowIfFailed(
+			m_deviceResources->GetD3DDevice()->CreateGeometryShader(
+				&fileData[0],
+				fileData.size(),
+				nullptr,
+				&m_geometryShader
+				)
+			);
+
+		//TODO: Define and connect necessary constant buffers here
+	});
+
 	// Once both shaders are loaded, create the mesh.
 	auto createMeshTask = (createPSTask && createVSTask).then([this]() {
 
 		// Load mesh vertices. In this case, just a single strand
 		static const VertexPositionColor lineVertices[] =
 		{
-			{ XMFLOAT3(-0.5f, 0, 0), XMFLOAT3(0.0f, 0.0f, 0.0f) },
-			{ XMFLOAT3(0, 0, 0), XMFLOAT3(0.0f, 0.0f, 1.0f) },
-			{ XMFLOAT3(0.5f, 0, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+			{ XMFLOAT3(-0.5f, 0, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+			{ XMFLOAT3(0, -0.5f, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+			{ XMFLOAT3(0.25f, 0, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+			{ XMFLOAT3(0.75f, 0.5f, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
 		};
 
 		m_vertexCount = ARRAYSIZE(lineVertices);
@@ -252,4 +268,5 @@ void StrandRenderer::ReleaseDeviceDependentResources()
 	m_constantBuffer.Reset();
 	m_vertexBuffer.Reset();
 	m_indexBuffer.Reset();
+	m_geometryShader.Reset();
 }
