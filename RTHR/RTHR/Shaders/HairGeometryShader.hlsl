@@ -5,11 +5,11 @@ struct GSOutput
 
 [maxvertexcount(3)]
 void main(
-	triangle float4 input[3] : SV_POSITION, 
+	line float4 input[2] : SV_POSITION, 
 	inout LineStream<GSOutput> output
 )
 {
-	for (uint i = 0; i < 3; i++)
+	for (uint i = 0; i < 2; i++)
 	{
 		GSOutput element;
 		element.pos = input[i];
