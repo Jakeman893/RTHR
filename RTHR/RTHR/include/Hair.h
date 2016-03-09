@@ -9,9 +9,12 @@ using namespace DirectX::SimpleMath;
 class Hair
 {
 protected:
-	static int width;
-	static int height;
+	// Defines the width and height for all strands of hair
+	// used uint to avoid the use of negative values
+	static uint16 width;
+	static uint16 height;
 
+public:
 	// A structure that simply defines the position of a vertex in the hair
 	struct HairVertex
 	{
@@ -26,6 +29,14 @@ protected:
 		Vector3 tangent;
 		Vector3 normal;
 		Vector2 textCoord;
+	};
+
+	// Structure used to define the coordinate frame of the hair
+	struct coordFrame
+	{
+		Vector3 x;
+		Vector3 y;
+		Vector3 z;
 	};
 
 	// The type of interpolation that is used when multiplying hair strands across the triangles

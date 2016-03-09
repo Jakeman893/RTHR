@@ -212,6 +212,7 @@
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="include\Common\DeviceResources.cpp" />
+    <ClCompile Include="src\Hair.cpp" />
     <ClCompile Include="src\StrandRenderer.cpp" />
     <ClCompile Include="src\RTHRMain.cpp" />
     <ClCompile Include="src\FpsTextRenderer.cpp" />
