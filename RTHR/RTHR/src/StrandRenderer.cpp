@@ -118,6 +118,13 @@ void StrandRenderer::Render()
 		nullptr,
 		nullptr
 		);
+	
+	// Attach geometry shader
+	context->GSSetShader(
+		m_geometryShader.Get(),
+		nullptr,
+		0
+		);
 
 	//Attach pixel shader.
 	context->PSSetShader(
@@ -130,13 +137,6 @@ void StrandRenderer::Render()
 		m_vertexCount,
 		0
 		);
-
-	////Draw objects
-	//context->DrawIndexed(
-	//	m_indexCount,
-	//	0,
-	//	0
-	//	);
 }
 
 // Initializes view parameters when window size changes
@@ -215,19 +215,20 @@ void StrandRenderer::CreateDeviceDependentResources()
 				)
 			);
 
+		int i = 0;
 		//TODO: Define and connect necessary constant buffers here
 	});
 
-	// Once both shaders are loaded, create the mesh.
-	auto createMeshTask = (createPSTask && createVSTask).then([this]() {
+	// Once all shaders are loaded, create the mesh.
+	auto createMeshTask = (createPSTask && createVSTask && createGSTask).then([this]() {
 
 		// Load mesh vertices. In this case, just a single strand
 		static const VertexPositionColor lineVertices[] =
 		{
-			{ XMFLOAT3(-0.5f, 0, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-			{ XMFLOAT3(0, -0.5f, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-			{ XMFLOAT3(0.25f, 0, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
-			{ XMFLOAT3(0.75f, 0.5f, 0), XMFLOAT3(0.0f, 1.0f, 0.0f) },
+			{ XMFLOAT3(-0.5f, 0, 0), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+			{ XMFLOAT3(0, -0.5f, 0), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+			{ XMFLOAT3(0.25f, 0, 0), XMFLOAT3(1.0f, 0.0f, 0.0f) },
+			{ XMFLOAT3(0.75f, 0.5f, 0), XMFLOAT3(1.0f, 0.0f, 0.0f) },
 		};
 
 		m_vertexCount = ARRAYSIZE(lineVertices);
