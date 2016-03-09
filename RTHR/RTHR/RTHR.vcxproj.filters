@@ -8,27 +8,11 @@
       <UniqueIdentifier>abac18f3-bddf-4bf0-af79-4b59be07bf40</UniqueIdentifier>
       <Extensions>bmp;fbx;gif;jpg;jpeg;tga;tiff;tif;png</Extensions>
     </Filter>
-    <Filter Include="Content">
-      <UniqueIdentifier>a4cd06f6-ca9e-4e8f-804c-1578bc9a1cad</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Content\Shaders">
-      <UniqueIdentifier>{0c57bb37-1805-4f2a-93c9-5815f9b7b15d}</UniqueIdentifier>
-      <Extensions>.hlsl</Extensions>
-    </Filter>
     <Filter Include="Assets\Models">
       <UniqueIdentifier>{545e077b-9c26-46ef-9a70-58d319ff256e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets\Textures">
       <UniqueIdentifier>{d8611d51-ea71-4e90-944e-ee37c1d82355}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Content\FPS Text Renderer">
-      <UniqueIdentifier>{f5ed7a72-0db7-41e4-89be-de8b73426a7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Content\Hair Strand Render">
-      <UniqueIdentifier>{626c2101-d357-49c3-baa9-eb584a316702}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Content\Sample Scene">
-      <UniqueIdentifier>{e8d5c965-ab19-41c5-b16a-e847c3e7bd65}</UniqueIdentifier>
     </Filter>
     <Filter Include="Assets\AppxPackage">
       <UniqueIdentifier>{28a392f6-9fdb-4369-917b-6eb74904d84c}</UniqueIdentifier>
@@ -39,16 +23,32 @@
     <Filter Include="Source">
       <UniqueIdentifier>{4a25e68f-b541-43c0-b2cc-ddee4a0944d3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Rendering Classes">
+      <UniqueIdentifier>a4cd06f6-ca9e-4e8f-804c-1578bc9a1cad</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering Classes\Shaders">
+      <UniqueIdentifier>{0c57bb37-1805-4f2a-93c9-5815f9b7b15d}</UniqueIdentifier>
+      <Extensions>.hlsl</Extensions>
+    </Filter>
+    <Filter Include="Rendering Classes\FPS Text Renderer">
+      <UniqueIdentifier>{f5ed7a72-0db7-41e4-89be-de8b73426a7b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering Classes\Hair Strand Render">
+      <UniqueIdentifier>{626c2101-d357-49c3-baa9-eb584a316702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Rendering Classes\Sample Scene">
+      <UniqueIdentifier>{e8d5c965-ab19-41c5-b16a-e847c3e7bd65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\StrandRenderer.cpp">
-      <Filter>Content\Hair Strand Render</Filter>
+      <Filter>Rendering Classes\Hair Strand Render</Filter>
     </ClCompile>
     <ClCompile Include="src\Sample3DSceneRenderer.cpp">
-      <Filter>Content\Sample Scene</Filter>
+      <Filter>Rendering Classes\Sample Scene</Filter>
     </ClCompile>
     <ClCompile Include="src\FpsTextRenderer.cpp">
-      <Filter>Content\FPS Text Renderer</Filter>
+      <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClCompile>
     <ClCompile Include="include\Common\DeviceResources.cpp">
       <Filter>Common</Filter>
@@ -65,13 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\StrandRenderer.h">
-      <Filter>Content\Hair Strand Render</Filter>
+      <Filter>Rendering Classes\Hair Strand Render</Filter>
     </ClInclude>
     <ClInclude Include="include\Sample3DSceneRenderer.h">
-      <Filter>Content\Sample Scene</Filter>
+      <Filter>Rendering Classes\Sample Scene</Filter>
     </ClInclude>
     <ClInclude Include="include\FpsTextRenderer.h">
-      <Filter>Content\FPS Text Renderer</Filter>
+      <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClInclude>
     <ClInclude Include="include\Common\DeviceResources.h">
       <Filter>Common</Filter>
@@ -80,7 +80,7 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Common\ShaderStructures.h">
-      <Filter>Content</Filter>
+      <Filter>Rendering Classes</Filter>
     </ClInclude>
     <ClInclude Include="include\RTHRMain.h">
       <Filter>Headers</Filter>
@@ -93,6 +93,9 @@
     </ClInclude>
     <ClInclude Include="include\Common\StepTimer.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Hair.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -126,10 +129,10 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">
-      <Filter>Content\Shaders</Filter>
+      <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
-      <Filter>Content\Shaders</Filter>
+      <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairPixelShader.hlsl" />
     <FxCompile Include="Shaders\HairVertexShader.hlsl" />

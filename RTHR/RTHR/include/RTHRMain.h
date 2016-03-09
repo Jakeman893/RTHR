@@ -6,6 +6,8 @@
 #include "FpsTextRenderer.h"
 #include "StrandRenderer.h"
 
+#include "VertexTypes.h"
+
 // Renders Direct2D and 3D content on the screen.
 namespace RTHR
 {
