@@ -6,12 +6,8 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-class Hair
+namespace RTHR
 {
-protected:
-	static int width;
-	static int height;
-
 	// A structure that simply defines the position of a vertex in the hair
 	struct HairVertex
 	{
@@ -39,4 +35,56 @@ protected:
 
 		NUM_INTERPOLATE_MODELS
 	};
-};
+
+	enum RENDERTYPE
+	{
+		INSTANCED_DEPTH,
+		INSTANCED_DENSITY,
+		INSTANCED_NORMAL_HAIR,
+		INSTANCED_INTERPOLATED_COLLISION,
+		INSTANCED_HAIR_DEPTHPASS,
+		INSTANCED_COLLISION_RESULTS,
+		SOATTRIBUTES,
+		INSTANCED_DEPTH_DOM,
+	};
+
+	enum INTERP_MODEL
+	{
+		HYBRID,
+		MULTI_HYBRID,
+		MULTISTRAND,
+		SINGLESTRAND,
+		NO_HAIR,
+		NUM_INTERPOLATE_MODELS
+	};
+
+	enum HairStyle
+	{
+		SHORT,
+		MEDIUM,
+		LONG,
+		NONE,
+	};
+
+	// The hair class that allows for the additon of a hair scalp to the scene with realistic hair
+	// simulated
+	class Hair
+	{
+	public:
+		// Width and height of the hair 
+		int width;
+		int height;
+
+		// Count of wisps
+		int wispCount;
+
+		// List of the guideStrand hair vertexes
+		std::vector<HairVertex*> guideStrands;
+
+		// List of indices in the mesh
+		int* indices;
+
+		// Loads the hair data from the provided .txt file
+		void loadHairVertex(string dir, HairStyle style);
+	};
+}

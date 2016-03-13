@@ -6,6 +6,7 @@ using namespace RTHR;
 using namespace Windows::Foundation;
 using namespace Windows::System::Threading;
 using namespace Concurrency;
+using namespace DirectX;
 
 // Loads and initializes application assets when the application is loaded.
 RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
