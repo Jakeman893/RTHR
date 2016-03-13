@@ -24,6 +24,14 @@ namespace RTHR
 		Vector2 textCoord;
 	};
 
+	// Structure used to define the coordinate frame of the hair
+	struct coordFrame
+	{
+		Vector3 x;
+		Vector3 y;
+		Vector3 z;
+	};
+
 	// The type of interpolation that is used when multiplying hair strands across the triangles
 	enum INTERPOLATION_TYPE
 	{
@@ -86,5 +94,5 @@ namespace RTHR
 
 		// Loads the hair data from the provided .txt file
 		void loadHairVertex(string dir, HairStyle style);
-	};
+};
 }
