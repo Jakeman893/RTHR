@@ -65,6 +65,9 @@
     <ClCompile Include="src\Hair.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\LoadMayaHair.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\StrandRenderer.h">
@@ -148,5 +151,18 @@
     <MeshContentTask Include="Assets\Models\Basehead.fbx">
       <Filter>Assets\Models</Filter>
     </MeshContentTask>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Assets\HairResources\hair.txt">
+      <Filter>Assets</Filter>
+    </Text>
+    <Text Include="Assets\HairResources\hair_vertices.txt">
+      <Filter>Assets</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Assets\HairResources\scalp_mesh.obj">
+      <Filter>Assets</Filter>
+    </Object>
   </ItemGroup>
 </Project>

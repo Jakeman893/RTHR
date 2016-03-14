@@ -93,6 +93,6 @@ namespace RTHR
 		int* indices;
 
 		// Loads the hair data from the provided .txt file
-		void loadHairVertex(string dir, HairStyle style);
-};
+		bool loadHairVertex(string dir, HairStyle style);
+	};
 }
