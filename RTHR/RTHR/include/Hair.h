@@ -38,13 +38,13 @@ namespace RTHR
 	// The type of interpolation that is used when multiplying hair strands across the triangles
 	enum INTERPOLATION_TYPE
 	{
-		HYBRID,
-		MULTI_HYBRID,
-		MULTISTRAND,
-		SINGLESTRAND,
-		NO_HAIR,
+		HYBRID_TYPE,
+		MULTI_HYBRID_TYPE,
+		MULTISTRAND_TYPE,
+		SINGLESTRAND_TYPE,
+		NO_HAIR_TYPE,
 
-		NUM_INTERPOLATE_MODELS
+		NUM_INTERPOLATE_MODELS_TYPE
 	};
 
 	enum RENDERTYPE
@@ -71,7 +71,7 @@ namespace RTHR
 
 	// The hair class that allows for the additon of a hair scalp to the scene with realistic hair
 	// simulated
-	public class Hair
+	class Hair
 	{
 	public:
 		//Constructors for the hair object
@@ -106,6 +106,6 @@ namespace RTHR
 		// Loads the hair data from the provided .txt file
 		bool loadHairVertex(string dir);
 
-		PrimitiveBatch<VertexPositionNormalTangentColorTexture> a;
+		//PrimitiveBatch<VertexPositionNormalTangentColorTexture> a;
 	};
 }

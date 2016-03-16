@@ -208,6 +208,7 @@
     <ClInclude Include="include\FpsTextRenderer.h" />
     <ClInclude Include="include\Common\ShaderStructures.h" />
     <ClInclude Include="include\pch.h" />
+    <ClInclude Include="include\TextConsole.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp" />
@@ -226,6 +227,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\TextConsole.cpp" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="Package.appxmanifest">
@@ -278,9 +280,6 @@
   <ItemGroup>
     <Text Include="Assets\HairResources\hair.txt" />
     <Text Include="Assets\HairResources\hair_vertices.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Assets\HairResources\scalp_mesh.obj" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

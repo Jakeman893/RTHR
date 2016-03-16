@@ -1,3 +1,5 @@
+#pragma once
+#include "pch.h"
 #include "Hair.h"
 
 namespace RTHR {
@@ -35,7 +37,7 @@ namespace RTHR {
 
 	void Hair::LoadVertices()
 	{
-		a.
+
 	}
 
 

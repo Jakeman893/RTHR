@@ -1,5 +1,6 @@
+#pragma once
+#include "pch.h"
 #include "Hair.h"
-#include "SimpleMath.h"
 #include <fstream>
 #include <sstream>
 

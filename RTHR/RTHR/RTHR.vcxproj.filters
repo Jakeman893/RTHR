@@ -68,6 +68,9 @@
     <ClCompile Include="src\LoadMayaHair.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\TextConsole.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\StrandRenderer.h">
@@ -101,6 +104,9 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="include\Hair.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TextConsole.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -159,10 +165,5 @@
     <Text Include="Assets\HairResources\hair_vertices.txt">
       <Filter>Assets</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="Assets\HairResources\scalp_mesh.obj">
-      <Filter>Assets</Filter>
-    </Object>
   </ItemGroup>
 </Project>
