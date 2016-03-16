@@ -4,16 +4,17 @@
 #include <assert.h>
 
 using namespace DirectX;
+using Microsoft::WRL::ComPtr;
 
 TextConsole::TextConsole() : m_textColor(1.f, 1.f, 1.f, 1.f)
 {
 	Clear();
 }
 
-TextConsole::TextConsole(shared_ptr<DeviceResources> device, const wchar_t* fontName)
+TextConsole::TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName)
 	: m_textColor(1.f, 1.f, 1.f, 1.f)
 {
-	RestoreDevice(device, fontName);
+	RestoreDevice(context, fontName);
 
 	Clear();
 }
@@ -128,4 +129,77 @@ void TextConsole::SetWindow(const RECT& layout)
 	std::swap(rows, m_rows);
 	std::swap(buffer, m_buffer);
 	std::swap(lines, m_lines);
+}
+
+void TextConsole::ReleaseDevice()
+{
+	m_batch.reset();
+	m_font.reset();
+	m_context.Reset();
+}
+
+void TextConsole::RestoreDevice(ID3D11DeviceContext* context, const wchar_t* fontName)
+{
+	m_context = context;
+
+	m_batch = std::make_unique<SpriteBatch>(context);
+
+	ComPtr<ID3D11Device> device;
+	context->GetDevice(device.GetAddressOf());
+
+	m_font = std::make_unique<SpriteFont>(device.Get(), fontName);
+
+	m_font->SetDefaultCharacter(L' ');
+}
+
+void TextConsole::ProcessString(const wchar_t* str)
+{
+	if (!m_lines)
+		return;
+
+	float width = float(m_layout.right - m_layout.left);
+
+	for (const wchar_t* ch = str; *ch != 0; ++ch)
+	{
+		if (*ch == '\n')
+		{
+			IncrementLine();
+			continue;
+		}
+
+		bool increment = false;
+
+		if (m_currentColumn >= m_columns)
+			increment = true;
+		else
+		{
+			m_lines[m_currentLine][m_currentColumn] = *ch;
+
+			auto fontSize = m_font->MeasureString(m_lines[m_currentLine]);
+			if (XMVectorGetX(fontSize) > width)
+			{
+				m_lines[m_currentLine][m_currentColumn] = L'\0';
+
+				increment = true;
+			}
+		}
+
+		if (increment)
+		{
+			IncrementLine();
+			m_lines[m_currentLine][0] = *ch;
+		}
+
+		++m_currentColumn;
+	}
+}
+
+void TextConsole::IncrementLine()
+{
+	if (!m_lines)
+		return;
+
+	m_currentLine = (m_currentLine + 1) % m_rows;
+	m_currentColumn = 0;
+	memset(m_lines[m_currentLine], 0, sizeof(wchar_t)*(m_columns + 1));
 }
