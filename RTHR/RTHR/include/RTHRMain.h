@@ -6,6 +6,10 @@
 #include "FpsTextRenderer.h"
 #include "StrandRenderer.h"
 
+#include "VertexTypes.h"
+
+using namespace DX;
+
 // Renders Direct2D and 3D content on the screen.
 namespace RTHR
 {
@@ -23,11 +27,10 @@ namespace RTHR
 		virtual void OnDeviceRestored();
 
 	private:
-		// Cached pointer to device resources.
-		std::shared_ptr<DX::DeviceResources> m_deviceResources;
+		// The GPU device
+		std::shared_ptr<DeviceResources> mDeviceResources;
 
 		// TODO: Replace with your own content renderers.
-		std::unique_ptr<StrandRenderer> m_sceneRenderer;
 		std::unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
 
 		// Rendering loop timer.
