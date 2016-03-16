@@ -7,20 +7,12 @@ using namespace DirectX;
 
 namespace RTHR
 {
-	typedef vector<Vector3> HairStrand;
-
-	bool Hair::loadHairVertex(string dir, HairStyle style)
+	bool Hair::loadHairVertex(string dir)
 	{
 		char filename[MAX_PATH];
 
 		TCHAR HairStrandsTextFile[MAX_PATH];
 		sprintf_s(filename, 100, "%s\\%s", dir, "hair_vertices.txt");
-		
-		//read the files
-
-		//Read each hair strand and push it into strand list
-		vector<HairStrand> hairStrands;
-		vector<Vector2> hairTexture;
 
 		// The coordinates for global coordinate system
 		double x, y, z;
@@ -73,23 +65,10 @@ namespace RTHR
 
 					if (i < 13)
 					{
-						switch (style)
-						{
-						case HairStyle::LONG:
-							strand.push_back(hairVertex);
-							totalCVs++;
-							break;
-						case HairStyle::MEDIUM:
-							break;
-						case HairStyle::SHORT:
-							break;
-						case HairStyle::NONE:
-							break;
-						default:
-							break;
-						}
+						strand.push_back(hairVertex);
+						totalCVs++;
 					}
-					hairStrands.push_back(strand);
+					guideStrands.push_back(strand);
 				}
 			}
 		}

@@ -1,6 +1,8 @@
 #pragma once
 #include "pch.h"
 #include "SimpleMath.h"
+#include "VertexTypes.h"
+#include "PrimitiveBatch.h"
 #include <string>
 using namespace std;
 using namespace DirectX;
@@ -8,11 +10,11 @@ using namespace DirectX::SimpleMath;
 
 namespace RTHR
 {
+	// Redefinition for simpler readability
+	typedef vector<Vector3> HairStrand;
+
 	// A structure that simply defines the position of a vertex in the hair
-	struct HairVertex
-	{
-		Vector4 position;
-	};
+	typedef Vector4 HairVertex;
 
 	// This structure is used to define the position, normal, and tangent to a particular strand's root
 	// this is useful for extruding hair out of vertices from a particular "root"
@@ -22,6 +24,7 @@ namespace RTHR
 		Vector3 tangent;
 		Vector3 normal;
 		Vector2 textCoord;
+		int length;
 	};
 
 	// Structure used to define the coordinate frame of the hair
@@ -66,33 +69,43 @@ namespace RTHR
 		NUM_INTERPOLATE_MODELS
 	};
 
-	enum HairStyle
-	{
-		SHORT,
-		MEDIUM,
-		LONG,
-		NONE,
-	};
-
 	// The hair class that allows for the additon of a hair scalp to the scene with realistic hair
 	// simulated
-	class Hair
+	public class Hair
 	{
 	public:
-		// Width and height of the hair 
-		int width;
-		int height;
+		//Constructors for the hair object
+		Hair(string dir, uint16 width, uint16 length);
+		
+		//Standard getter/setter functions
+		int getWidth();
+		int getLength();
+		int getWispCount();
+
+		// Will need to update constant buffer
+		void setWispCount(uint16 count);
+
+		void LoadVertices();
+
+	private:
+		// Width of strand
+		uint16 width;
+
+		// Length between vertices
+		uint16 length;
 
 		// Count of wisps
-		int wispCount;
+		uint16 wispCount;
 
 		// List of the guideStrand hair vertexes
-		std::vector<HairVertex*> guideStrands;
+		std::vector<HairStrand> guideStrands;
 
-		// List of indices in the mesh
-		int* indices;
+		// The texture coords of each hair strand
+		vector<Vector2> hairTexture;
 
 		// Loads the hair data from the provided .txt file
-		bool loadHairVertex(string dir, HairStyle style);
+		bool loadHairVertex(string dir);
+
+		PrimitiveBatch<VertexPositionNormalTangentColorTexture> a;
 	};
 }
