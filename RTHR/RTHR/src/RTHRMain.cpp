@@ -15,9 +15,19 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 #ifdef _DEBUG
 	m_console = make_unique<TextConsole>();
 
+	m_console->RestoreDevice(deviceResources->GetD3DDeviceContext(), L"Assets\\Fonts\\consolas.spritefont");
+
 	// Optionally set a color other than default
 	m_console->SetForegroundColor(Colors::Chocolate);
 #endif
+
+	CreateWindowSizeDependentResources();
+
+#ifdef _DEBUG
+	m_console->WriteLine(L"Starting Up...");
+#endif
+
+	m_hair = make_unique<Hair>(L"Assets\\HairResources\\hair_vertices.txt", 2, 5);
 }
 
 RTHRMain::~RTHRMain()
@@ -95,7 +105,7 @@ void RTHRMain::OnDeviceLost()
 void RTHRMain::OnDeviceRestored()
 {
 #ifdef _DEBUG
-	m_console->RestoreDevice(m_deviceResources->GetD3DDeviceContext(), L"consolas.spritefont");
+	m_console->RestoreDevice(m_deviceResources->GetD3DDeviceContext(), L"../../Fonts/consolas.spritefont");
 #endif
 	m_fpsTextRenderer->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();

@@ -75,7 +75,8 @@ namespace RTHR
 	{
 	public:
 		//Constructors for the hair object
-		Hair(string dir, uint16 width, uint16 length);
+		Hair();
+		Hair(wchar_t const* dir, uint16 width, uint16 length);
 		
 		//Standard getter/setter functions
 		int getWidth();
@@ -104,7 +105,7 @@ namespace RTHR
 		vector<Vector2> hairTexture;
 
 		// Loads the hair data from the provided .txt file
-		bool loadHairVertex(string dir);
+		bool loadHairVertex(wchar_t const* dir);
 
 		//PrimitiveBatch<VertexPositionNormalTangentColorTexture> a;
 	};

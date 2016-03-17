@@ -8,6 +8,7 @@
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 #include "TextConsole.h"
+#include "Hair.h"
 
 using namespace DX;
 using namespace RTHR;
@@ -41,6 +42,9 @@ namespace RTHR
 
 		// Rendering loop timer.
 		DX::StepTimer m_timer;
+
+		// The hair object
+		unique_ptr<Hair> m_hair;
 
 #ifdef _DEBUG
 		// Create console for debug messages
