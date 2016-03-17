@@ -19,7 +19,6 @@ class TextConsole
 public:
 	TextConsole();
 	TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName);
-	~TextConsole();
 
 	void Render();
 

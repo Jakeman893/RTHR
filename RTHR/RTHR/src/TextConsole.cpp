@@ -1,7 +1,9 @@
-#include "TextConsole.h"
+#include "pch.h"
 #include <stdio.h>
 #include <stdarg.h>
 #include <assert.h>
+
+#include "TextConsole.h"
 
 using namespace DirectX;
 using Microsoft::WRL::ComPtr;
@@ -72,26 +74,26 @@ void TextConsole::WriteLine(const wchar_t *str)
 	IncrementLine();
 }
 
-void TextConsole::Format(const wchar_t* strFormat, ...)
-{
-	std::lock_guard<std::mutex> lock(m_mutex);
-
-	va_list argList;
-	va_start(argList, strFormat);
-
-	size_t len = _vscwprintf(strFormat, argList) + 1;
-
-	if (m_tempBuffer.size() < len)
-		m_tempBuffer.resize(len);
-
-	memset(m_tempBuffer.data(), 0, len);
-
-	vswprintf_s(m_tempBuffer.data(), m_tempBuffer.size(), strFormat, argList);
-
-	va_end(argList);
-
-	ProcessString(m_tempBuffer.data());
-}
+//void TextConsole::Format(const wchar_t* strFormat, ...)
+//{
+//	std::lock_guard<std::mutex> lock(m_mutex);
+//
+//	va_list argList;
+//	va_start(argList, strFormat);
+//
+//	size_t len = _vscwprintf(strFormat, argList) + 1;
+//
+//	if (m_tempBuffer.size() < len)
+//		m_tempBuffer.resize(len);
+//
+//	memset(m_tempBuffer.data(), 0, len);
+//
+//	vswprintf_s(m_tempBuffer.data(), m_tempBuffer.size(), strFormat, argList);
+//
+//	va_end(argList);
+//
+//	ProcessString(m_tempBuffer.data());
+//}
 
 void TextConsole::SetWindow(const RECT& layout)
 {
