@@ -23,6 +23,10 @@ TextConsole::TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName)
 
 void TextConsole::Render()
 {
+	// Breaks if no lines were added to the console avoiding seg fault
+	if (!m_lines)
+		return;
+
 	std::lock_guard<std::mutex> lock(m_mutex);
 
 	float lineSpacing = m_font->GetLineSpacing();
@@ -33,7 +37,6 @@ void TextConsole::Render()
 	XMVECTOR color = XMLoadFloat4(&m_textColor);
 
 	m_batch->Begin();
-
 	unsigned int textLine = unsigned int(m_currentLine - m_rows + m_rows + 1) % m_rows;
 
 	for (unsigned int line = 0; line < m_rows; ++line)

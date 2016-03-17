@@ -8,12 +8,12 @@ using namespace DirectX;
 
 namespace RTHR
 {
-	bool Hair::loadHairVertex(string dir)
+	bool Hair::loadHairVertex(wchar_t const* dir)
 	{
-		char filename[MAX_PATH];
+		//char filename[MAX_PATH];
 
-		TCHAR HairStrandsTextFile[MAX_PATH];
-		sprintf_s(filename, 100, "%s\\%s", dir, "hair_vertices.txt");
+		//TCHAR HairStrandsTextFile[MAX_PATH];
+		//sprintf_s(filename, 100, "%s\\%s", dir, "hair_vertices.txt");
 
 		// The coordinates for global coordinate system
 		double x, y, z;
@@ -21,10 +21,9 @@ namespace RTHR
 		// The texture coordinates
 		double u, v;
 
-		ifstream infile;
-		infile.open(filename);
+		ifstream infile(dir);
 
-		if (!infile)
+		if (!infile || infile.fail())
 			return false;
 
 		char c[MAX_PATH];

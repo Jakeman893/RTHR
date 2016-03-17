@@ -233,6 +233,9 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <None Include="Assets\Fonts\consolas.spritefont">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
     <None Include="RTHR_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>

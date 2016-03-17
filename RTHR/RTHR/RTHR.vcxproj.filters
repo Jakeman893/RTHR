@@ -138,6 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="RTHR_TemporaryKey.pfx" />
+    <None Include="Assets\Fonts\consolas.spritefont">
+      <Filter>Assets</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">

@@ -3,7 +3,7 @@
 #include "Hair.h"
 
 namespace RTHR {
-	Hair::Hair(string dir, uint16 width, uint16 length)
+	Hair::Hair(wchar_t const* dir, uint16 width, uint16 length)
 	{
 		this->width = width;
 		this->length = length;
