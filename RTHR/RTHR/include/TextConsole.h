@@ -18,8 +18,7 @@ class TextConsole
 {
 public:
 	TextConsole();
-	TextConsole(shared_ptr<DeviceResources> deviceResources, const wchar_t* fontName);
-	~TextConsole();
+	TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName);
 
 	void Render();
 
@@ -34,27 +33,27 @@ public:
 	void XM_CALLCONV SetForegroundColor(DirectX::FXMVECTOR color) { DirectX::XMStoreFloat4(&m_textColor, color); }
 
 	void ReleaseDevice();
-	void RestoreDevice(shared_ptr<DeviceResources> deviceResources, const wchar_t* fontName);
+	void RestoreDevice(ID3D11DeviceContext* context ,const wchar_t* fontName);
 
 private:
 	void ProcessString(const wchar_t* str);
 	void IncrementLine();
 
-	RECT										m_layout;
-	DirectX::XMFLOAT4							m_textColor;
+	RECT											m_layout;
+	DirectX::XMFLOAT4								m_textColor;
 
-	unsigned int								m_columns;
-	unsigned int								m_rows;
-	unsigned int								m_currentColumn;
-	unsigned int								m_currentLine;
+	unsigned int									m_columns;
+	unsigned int									m_rows;
+	unsigned int									m_currentColumn;
+	unsigned int									m_currentLine;
 	
-	unique_ptr<wchar_t[]>						m_buffer;
-	unique_ptr<wchar_t*[]>						m_lines;
-	vector<wchar_t>								m_tempBuffer;
+	unique_ptr<wchar_t[]>							m_buffer;
+	unique_ptr<wchar_t*[]>							m_lines;
+	vector<wchar_t>									m_tempBuffer;
 
-	unique_ptr<DirectX::SpriteBatch>			m_batch;
-	unique_ptr<DirectX::SpriteFont>				m_font;
-	unique_ptr<DeviceResources>					m_device;
+	unique_ptr<DirectX::SpriteBatch>				m_batch;
+	unique_ptr<DirectX::SpriteFont>					m_font;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_context;
 
-	std::mutex									m_mutex;
+	std::mutex										m_mutex;
 };

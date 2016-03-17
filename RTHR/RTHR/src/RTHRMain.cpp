@@ -2,33 +2,38 @@
 #include "RTHRMain.h"
 #include "Common\DirectXHelper.h"
 
-using namespace RTHR;
-using namespace Windows::Foundation;
-using namespace Windows::System::Threading;
-using namespace Concurrency;
-using namespace DirectX;
-
 // Loads and initializes application assets when the application is loaded.
 RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-	mDeviceResources(deviceResources)
+	m_deviceResources(deviceResources)
 {
 	// Register to be notified if the Device is lost or recreated
-	mDeviceResources->RegisterDeviceNotify(this);
+	m_deviceResources->RegisterDeviceNotify(this);
 
 	// TODO: Replace this with your app's content initialization.
-	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(mDeviceResources));
+	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
+
+#ifdef _DEBUG
+	m_console = make_unique<TextConsole>();
+
+	// Optionally set a color other than default
+	m_console->SetForegroundColor(Colors::Chocolate);
+#endif
 }
 
 RTHRMain::~RTHRMain()
 {
 	// Deregister device notification
-	mDeviceResources->RegisterDeviceNotify(nullptr);
+	m_deviceResources->RegisterDeviceNotify(nullptr);
 }
 
 // Updates application state when the window size changes (e.g. device orientation change)
 void RTHRMain::CreateWindowSizeDependentResources() 
 {
 	// TODO: Replace this with the size-dependent initialization of your app's content.
+#ifdef _DEBUG
+	auto size = m_deviceResources->GetOutputSize();
+	m_console->SetWindow(SimpleMath::Viewport::ComputeTitleSafeArea(size.Width, size.Height));
+#endif
 }
 
 // Updates the application state once per frame.
@@ -52,23 +57,27 @@ bool RTHRMain::Render()
 		return false;
 	}
 
-	auto context = mDeviceResources->GetD3DDeviceContext();
+	auto context = m_deviceResources->GetD3DDeviceContext();
 
 	// Reset the viewport to target the whole screen.
-	auto viewport = mDeviceResources->GetScreenViewport();
+	auto viewport = m_deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 
 	// Reset render targets to the screen.
-	ID3D11RenderTargetView *const targets[1] = { mDeviceResources->GetBackBufferRenderTargetView() };
-	context->OMSetRenderTargets(1, targets, mDeviceResources->GetDepthStencilView());
+	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
+	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
 	// Clear the back buffer and depth stencil view.
-	context->ClearRenderTargetView(mDeviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-	context->ClearDepthStencilView(mDeviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	// Render the scene objects.
 	// TODO: Replace this with your app's content rendering functions.
 	m_fpsTextRenderer->Render();
+
+#ifdef _DEBUG
+	m_console->Render();
+#endif
 
 	return true;
 }
@@ -76,12 +85,18 @@ bool RTHRMain::Render()
 // Notifies renderers that device resources need to be released.
 void RTHRMain::OnDeviceLost()
 {
+#ifdef _DEBUG
+	m_console->ReleaseDevice();
+#endif
 	m_fpsTextRenderer->ReleaseDeviceDependentResources();
 }
 
 // Notifies renderers that device resources may now be recreated.
 void RTHRMain::OnDeviceRestored()
 {
+#ifdef _DEBUG
+	m_console->RestoreDevice(m_deviceResources->GetD3DDeviceContext(), L"consolas.spritefont");
+#endif
 	m_fpsTextRenderer->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 }
