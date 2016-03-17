@@ -13,12 +13,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
 
 #ifdef _DEBUG
-	m_console = make_unique<TextConsole>();
-
 	m_console->RestoreDevice(deviceResources->GetD3DDeviceContext(), L"Assets\\Fonts\\consolas.spritefont");
-
-	// Optionally set a color other than default
-	m_console->SetForegroundColor(Colors::Chocolate);
 #endif
 
 	CreateWindowSizeDependentResources();

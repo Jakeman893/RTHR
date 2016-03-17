@@ -1,8 +1,4 @@
 #include "pch.h"
-#include <stdio.h>
-#include <stdarg.h>
-#include <assert.h>
-
 #include "TextConsole.h"
 
 using namespace DirectX;

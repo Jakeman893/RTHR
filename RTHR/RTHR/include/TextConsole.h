@@ -57,3 +57,6 @@ private:
 
 	std::mutex										m_mutex;
 };
+
+//Global TextConsole object so the console can be used by any
+static unique_ptr<TextConsole> m_console = std::make_unique<TextConsole>();

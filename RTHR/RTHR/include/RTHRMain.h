@@ -7,7 +7,9 @@
 #include "StrandRenderer.h"
 #include "SimpleMath.h"
 #include "VertexTypes.h"
-#include "TextConsole.h"
+#ifdef _DEBUG
+	#include "TextConsole.h"
+#endif // DEBUG
 #include "Hair.h"
 
 using namespace DX;
@@ -45,10 +47,5 @@ namespace RTHR
 
 		// The hair object
 		unique_ptr<Hair> m_hair;
-
-#ifdef _DEBUG
-		// Create console for debug messages
-		unique_ptr<TextConsole> m_console;
-#endif
 	};
 }
