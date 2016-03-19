@@ -109,6 +109,9 @@
     <ClInclude Include="include\TextConsole.h">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="GeometricTypes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\LockScreenLogo.scale-200.png">

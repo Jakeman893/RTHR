@@ -3,6 +3,8 @@
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 #include "PrimitiveBatch.h"
+#include "GeometricPrimitive.h"
+#include "GeometricTypes.h"
 #include <string>
 using namespace std;
 using namespace DirectX;
@@ -76,6 +78,7 @@ namespace RTHR
 	public:
 		//Constructors for the hair object
 		Hair();
+		Hair(GeometryType type, ID3D11DeviceContext* context, float size, uint16 width, uint16 length);
 		Hair(wchar_t const* dir, uint16 width, uint16 length);
 		
 		//Standard getter/setter functions
@@ -86,27 +89,33 @@ namespace RTHR
 		// Will need to update constant buffer
 		void setWispCount(uint16 count);
 
-		void LoadVertices();
+		// The rendering function to be called whenver a rendering call is made to the app
+		void Draw();
+
 
 	private:
 		// Width of strand
-		uint16 width;
+		uint16 m_width;
 
 		// Length between vertices
-		uint16 length;
+		uint16 m_length;
 
 		// Count of wisps
-		uint16 wispCount;
+		uint16 m_wispCount;
+
+		// Holds the geometric solid
+		unique_ptr<GeometricPrimitive> m_geometry;
 
 		// List of the guideStrand hair vertexes
-		std::vector<HairStrand> guideStrands;
+		std::vector<HairStrand> m_guideStrands;
 
 		// The texture coords of each hair strand
-		vector<Vector2> hairTexture;
+		vector<Vector2> m_hairTexture;
 
 		// Loads the hair data from the provided .txt file
-		bool loadHairVertex(wchar_t const* dir);
+		//bool loadHairVertex(wchar_t const* dir);
 
-		//PrimitiveBatch<VertexPositionNormalTangentColorTexture> a;
+		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
+		bool createHairStrands();
 	};
 }
