@@ -89,9 +89,13 @@ namespace RTHR
 		// Will need to update constant buffer
 		void setWispCount(uint16 count);
 
-		// The rendering function to be called whenver a rendering call is made to the app
-		void Draw();
+		// The rendering function to be called whenever a rendering call is made to the app
+		void Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, 
+					FXMVECTOR color = Colors::White, ID3D11ShaderResourceView* texture = (ID3D11ShaderResourceView*) nullptr,
+					bool wireframe = false, std::function<void()> setCustomState = nullptr);
 
+		// Resets the geometry object
+		void Reset();
 
 	private:
 		// Width of strand

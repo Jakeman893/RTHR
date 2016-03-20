@@ -86,8 +86,16 @@ namespace RTHR {
 		throw exception("Not Implemented!");
 	}
 
-	void Hair::Draw()
+	void Hair::Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, FXMVECTOR color, 
+					ID3D11ShaderResourceView* texture, bool wireframe, std::function<void()> setCustomState)
 	{
-		m_geometry->Draw()
+		//TODO Call generate hair strands
+
+		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
+	}
+
+	void Hair::Reset()
+	{
+		m_geometry.reset();
 	}
 }

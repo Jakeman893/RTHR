@@ -47,5 +47,10 @@ namespace RTHR
 
 		// The hair object
 		unique_ptr<Hair> m_hair;
+
+		// The world, view and projection matrices
+			Matrix m_world;
+			Matrix m_view;
+			Matrix m_proj;
 	};
 }
