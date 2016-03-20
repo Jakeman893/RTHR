@@ -1,3 +1,6 @@
 [submodule "DirectXMesh"]
 	path = DirectXMesh
 	url = https://github.com/Microsoft/DirectXMesh.git
+[submodule "DirectXTK"]
+	path = DirectXTK
+	url = https://github.com/Jakeman893/DirectXTK.git
