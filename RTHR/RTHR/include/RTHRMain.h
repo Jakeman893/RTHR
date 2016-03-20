@@ -2,9 +2,7 @@
 
 #include "Common\StepTimer.h"
 #include "Common\DeviceResources.h"
-#include "Sample3DSceneRenderer.h"
 #include "FpsTextRenderer.h"
-#include "StrandRenderer.h"
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 #ifdef _DEBUG
@@ -47,5 +45,10 @@ namespace RTHR
 
 		// The hair object
 		unique_ptr<Hair> m_hair;
+
+		// The world, view and projection matrices
+			Matrix m_world;
+			Matrix m_view;
+			Matrix m_proj;
 	};
 }

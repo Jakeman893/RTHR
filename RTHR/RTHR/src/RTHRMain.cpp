@@ -20,9 +20,17 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 
 #ifdef _DEBUG
 	m_console->WriteLine(L"Starting Up...");
+	m_console->WriteLine(L"Making geometry");
 #endif
 
-	m_hair = make_unique<Hair>(L"Assets\\HairResources\\hair_vertices.txt", 2, 5);
+	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources->GetD3DDeviceContext(), 1.0f, 4, 5);
+
+	m_world = Matrix::Identity;
+
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+		Vector3::Zero,
+		Vector3::UnitY);
+
 }
 
 RTHRMain::~RTHRMain()
@@ -35,10 +43,11 @@ RTHRMain::~RTHRMain()
 void RTHRMain::CreateWindowSizeDependentResources() 
 {
 	// TODO: Replace this with the size-dependent initialization of your app's content.
-#ifdef _DEBUG
 	auto size = m_deviceResources->GetOutputSize();
+#ifdef _DEBUG
 	m_console->SetWindow(SimpleMath::Viewport::ComputeTitleSafeArea(size.Width, size.Height));
 #endif
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, (size.Width/size.Height), 0.1f, 10.f);
 }
 
 // Updates the application state once per frame.
@@ -56,6 +65,7 @@ void RTHRMain::Update()
 // Returns true if the frame was rendered and is ready to be displayed.
 bool RTHRMain::Render() 
 {
+#pragma region RenderInit
 	// Don't try to render anything before the first Update.
 	if (m_timer.GetFrameCount() == 0)
 	{
@@ -75,22 +85,29 @@ bool RTHRMain::Render()
 	// Clear the back buffer and depth stencil view.
 	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
 	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+#pragma endregion
 
+#pragma region Render Calls
 	// Render the scene objects.
 	// TODO: Replace this with your app's content rendering functions.
 	m_fpsTextRenderer->Render();
+
+	m_hair->Draw(m_world, m_view, m_proj);
 
 #ifdef _DEBUG
 	m_console->Render();
 #endif
 
+#pragma endregion
 	return true;
 }
 
 // Notifies renderers that device resources need to be released.
 void RTHRMain::OnDeviceLost()
 {
+	m_hair->Reset();
 #ifdef _DEBUG
+	m_console->WriteLine(L"Device Lost");
 	m_console->ReleaseDevice();
 #endif
 	m_fpsTextRenderer->ReleaseDeviceDependentResources();
@@ -101,6 +118,7 @@ void RTHRMain::OnDeviceRestored()
 {
 #ifdef _DEBUG
 	m_console->RestoreDevice(m_deviceResources->GetD3DDeviceContext(), L"../../Fonts/consolas.spritefont");
+	m_console->WriteLine(L"Device Restored");
 #endif
 	m_fpsTextRenderer->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
