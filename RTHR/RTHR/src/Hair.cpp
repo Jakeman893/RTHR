@@ -60,7 +60,7 @@ namespace RTHR {
 		}
 
 		// Generates the strands extruded from each vertex
-		genStrands();
+		//genStrands();
 	}
 
 	int Hair::getLength()
