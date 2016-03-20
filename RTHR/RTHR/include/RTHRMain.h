@@ -2,9 +2,7 @@
 
 #include "Common\StepTimer.h"
 #include "Common\DeviceResources.h"
-#include "Sample3DSceneRenderer.h"
 #include "FpsTextRenderer.h"
-#include "StrandRenderer.h"
 #include "SimpleMath.h"
 #include "VertexTypes.h"
 #ifdef _DEBUG

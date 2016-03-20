@@ -33,17 +33,11 @@
     <Filter Include="Rendering Classes\FPS Text Renderer">
       <UniqueIdentifier>{f5ed7a72-0db7-41e4-89be-de8b73426a7b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering Classes\Hair Strand Render">
-      <UniqueIdentifier>{626c2101-d357-49c3-baa9-eb584a316702}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Rendering Classes\Sample Scene">
       <UniqueIdentifier>{e8d5c965-ab19-41c5-b16a-e847c3e7bd65}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\StrandRenderer.cpp">
-      <Filter>Rendering Classes\Hair Strand Render</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sample3DSceneRenderer.cpp">
       <Filter>Rendering Classes\Sample Scene</Filter>
     </ClCompile>
@@ -73,9 +67,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\StrandRenderer.h">
-      <Filter>Rendering Classes\Hair Strand Render</Filter>
-    </ClInclude>
     <ClInclude Include="include\Sample3DSceneRenderer.h">
       <Filter>Rendering Classes\Sample Scene</Filter>
     </ClInclude>

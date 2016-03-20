@@ -201,7 +201,6 @@
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\Common\DeviceResources.h" />
     <ClInclude Include="include\Hair.h" />
-    <ClInclude Include="include\StrandRenderer.h" />
     <ClInclude Include="include\RTHRMain.h" />
     <ClInclude Include="include\Common\DirectXHelper.h" />
     <ClInclude Include="include\Common\StepTimer.h" />
@@ -216,7 +215,6 @@
     <ClCompile Include="include\Common\DeviceResources.cpp" />
     <ClCompile Include="src\Hair.cpp" />
     <ClCompile Include="src\LoadMayaHair.cpp" />
-    <ClCompile Include="src\StrandRenderer.cpp" />
     <ClCompile Include="src\RTHRMain.cpp" />
     <ClCompile Include="src\FpsTextRenderer.cpp" />
     <ClCompile Include="src\Sample3DSceneRenderer.cpp" />

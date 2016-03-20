@@ -13,6 +13,9 @@ namespace RTHR {
 
 	Hair::Hair(GeometryType type, ID3D11DeviceContext* context, float size, uint16 width, uint16 length)
 	{
+		m_width = width;
+		m_length = length;
+
 		switch (type)
 		{
 		case(BOX) :
@@ -55,6 +58,9 @@ namespace RTHR {
 			throw invalid_argument("The provided type is not implemented!");
 			break;
 		}
+
+		// Generates the strands extruded from each vertex
+		genStrands();
 	}
 
 	int Hair::getLength()
@@ -81,7 +87,7 @@ namespace RTHR {
 			m_wispCount = count;
 	}
 
-	bool Hair::createHairStrands()
+	void Hair::genStrands()
 	{
 		throw exception("Not Implemented!");
 	}
@@ -89,8 +95,6 @@ namespace RTHR {
 	void Hair::Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, FXMVECTOR color, 
 					ID3D11ShaderResourceView* texture, bool wireframe, std::function<void()> setCustomState)
 	{
-		//TODO Call generate hair strands
-
 		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
 	}
 

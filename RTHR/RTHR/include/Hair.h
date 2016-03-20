@@ -106,7 +106,7 @@ namespace RTHR
 
 		// Count of wisps
 		uint16 m_wispCount;
-
+		
 		// Holds the geometric solid
 		unique_ptr<GeometricPrimitive> m_geometry;
 
@@ -120,6 +120,6 @@ namespace RTHR
 		//bool loadHairVertex(wchar_t const* dir);
 
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
-		bool createHairStrands();
+		void genStrands();
 	};
 }
