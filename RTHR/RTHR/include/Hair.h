@@ -111,7 +111,7 @@ namespace RTHR
 		unique_ptr<GeometricPrimitive> m_geometry;
 
 		// List of the guideStrand hair vertexes
-		std::vector<HairStrand> m_guideStrands;
+		unique_ptr<std::vector<HairStrand>> m_guideStrands;
 
 		// The texture coords of each hair strand
 		vector<Vector2> m_hairTexture;

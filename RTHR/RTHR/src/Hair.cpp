@@ -16,6 +16,8 @@ namespace RTHR {
 		m_width = width;
 		m_length = length;
 
+		m_guideStrands = make_unique<vector<HairStrand>>();
+
 		switch (type)
 		{
 		case(BOX) :
@@ -60,7 +62,7 @@ namespace RTHR {
 		}
 
 		// Generates the strands extruded from each vertex
-		//genStrands();
+		genStrands();
 	}
 
 	int Hair::getLength()
@@ -89,7 +91,27 @@ namespace RTHR {
 
 	void Hair::genStrands()
 	{
-		throw exception("Not Implemented!");
+		// Gets the constant pointer to the vertex collection of the input geometry
+		const VertexCollection* vert = m_geometry->getVertices();
+
+		// Retrieves the number of vertices in the geometry
+		uint32_t size = vert->size();
+		// Iterates over the vertices in the geometry extruding points along normal direction
+		// The distance between vertices will be resolved on GPU for LOD however an arbitrary 1
+		// is chosen for now
+		for (uint32_t i = 0; i < size; i++)
+		{
+			Vector3 direction = vert->at(i).normal;
+			Vector3 position = vert->at(i).position;
+			HairStrand strand = HairStrand();
+			for (uint32_t j = 0; j < m_length; j++)
+			{
+				//In the future, this should use UV texture map in order to paint weight onto the object
+				position += direction;
+				strand.push_back(position);
+			}
+			m_guideStrands->push_back(strand);
+		}
 	}
 
 	void Hair::Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, FXMVECTOR color, 
