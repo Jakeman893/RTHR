@@ -92,7 +92,7 @@ namespace RTHR {
 	void Hair::genStrands()
 	{
 		// Gets the constant pointer to the vertex collection of the input geometry
-		const VertexCollection* vert = m_geometry->getVertices();
+		const shared_ptr<VertexCollection> vert = m_geometry->getVertices();
 
 		// Retrieves the number of vertices in the geometry
 		uint32_t size = vert->size();
