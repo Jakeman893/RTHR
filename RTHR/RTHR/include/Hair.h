@@ -111,7 +111,10 @@ namespace RTHR
 		unique_ptr<GeometricPrimitive> m_geometry;
 
 		// List of the guideStrand hair vertexes
-		unique_ptr<std::vector<HairStrand>> m_guideStrands;
+		//unique_ptr<std::vector<HairStrand>> m_guideStrands;
+
+		// List of guidestrands as Geometric primitives
+		unique_ptr<std::vector<GeometricPrimitive>> m_guideStrands;
 
 		// The texture coords of each hair strand
 		vector<Vector2> m_hairTexture;
@@ -120,6 +123,6 @@ namespace RTHR
 		//bool loadHairVertex(wchar_t const* dir);
 
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
-		void genStrands();
+		void genStrands(ID3D11DeviceContext* context);
 	};
 }
