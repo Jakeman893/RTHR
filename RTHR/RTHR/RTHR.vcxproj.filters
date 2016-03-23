@@ -59,9 +59,6 @@
     <ClCompile Include="src\Hair.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\LoadMayaHair.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include="src\TextConsole.cpp">
       <Filter>Source</Filter>
     </ClCompile>
@@ -143,14 +140,6 @@
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\Models\Triangle.fbx">
-      <Filter>Assets\Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\Models\Basehead.fbx">
-      <Filter>Assets\Models</Filter>
-    </MeshContentTask>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\HairResources\hair.txt">

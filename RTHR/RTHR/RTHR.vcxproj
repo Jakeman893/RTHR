@@ -214,7 +214,6 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="include\Common\DeviceResources.cpp" />
     <ClCompile Include="src\Hair.cpp" />
-    <ClCompile Include="src\LoadMayaHair.cpp" />
     <ClCompile Include="src\RTHRMain.cpp" />
     <ClCompile Include="src\FpsTextRenderer.cpp" />
     <ClCompile Include="src\Sample3DSceneRenderer.cpp" />
@@ -244,10 +243,6 @@
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
       <ShaderType>Vertex</ShaderType>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\Models\Basehead.fbx" />
-    <MeshContentTask Include="Assets\Models\Triangle.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\HairResources\hair.txt" />

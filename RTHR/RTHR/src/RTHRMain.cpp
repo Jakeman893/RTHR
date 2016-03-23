@@ -23,7 +23,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	m_console->WriteLine(L"Making geometry");
 #endif
 
-	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources->GetD3DDeviceContext(), 1.0f, 4, 5);
+	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 5);
 
 	m_world = Matrix::Identity;
 

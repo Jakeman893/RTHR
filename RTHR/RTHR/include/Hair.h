@@ -4,8 +4,13 @@
 #include "VertexTypes.h"
 #include "PrimitiveBatch.h"
 #include "GeometricPrimitive.h"
+#include "Common\DeviceResources.h"
 #include "GeometricTypes.h"
+#include "Model.h"
+#include "Effects.h"
 #include <string>
+
+
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
@@ -78,7 +83,7 @@ namespace RTHR
 	public:
 		//Constructors for the hair object
 		Hair();
-		Hair(GeometryType type, ID3D11DeviceContext* context, float size, uint16 width, uint16 length);
+		Hair(GeometryType type, shared_ptr<DX::DeviceResources> device, float size, uint16 width, uint16 length);
 		Hair(wchar_t const* dir, uint16 width, uint16 length);
 		
 		//Standard getter/setter functions
@@ -107,22 +112,21 @@ namespace RTHR
 		// Count of wisps
 		uint16 m_wispCount;
 		
-		// Holds the geometric solid
+		// Holds the geometric solid that the strands are on
 		unique_ptr<GeometricPrimitive> m_geometry;
+		
+		// Holds the guidestrands of the hair mesh
+		unique_ptr<Model> m_guideStrands;
 
 		// List of the guideStrand hair vertexes
 		//unique_ptr<std::vector<HairStrand>> m_guideStrands;
 
-		// List of guidestrands as Geometric primitives
-		unique_ptr<std::vector<GeometricPrimitive>> m_guideStrands;
-
 		// The texture coords of each hair strand
 		vector<Vector2> m_hairTexture;
 
-		// Loads the hair data from the provided .txt file
-		//bool loadHairVertex(wchar_t const* dir);
-
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
-		void genStrands(ID3D11DeviceContext* context);
+		shared_ptr<ModelMesh> genStrands();
+
+		shared_ptr<DX::DeviceResources> m_device;
 	};
 }
