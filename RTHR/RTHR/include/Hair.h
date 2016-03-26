@@ -1,15 +1,12 @@
 #pragma once
 #include "pch.h"
 #include "SimpleMath.h"
-#include "VertexTypes.h"
-#include "PrimitiveBatch.h"
 #include "GeometricPrimitive.h"
 #include "Common\DeviceResources.h"
 #include "GeometricTypes.h"
 #include "Model.h"
 #include "Effects.h"
-#include <string>
-
+#include "CommonStates.h"
 
 using namespace std;
 using namespace DirectX;
@@ -128,5 +125,9 @@ namespace RTHR
 		shared_ptr<ModelMesh> genStrands();
 
 		shared_ptr<DX::DeviceResources> m_device;
+
+		unique_ptr<CommonStates> m_states;
+
+		shared_ptr<IEffect> m_effect;
 	};
 }

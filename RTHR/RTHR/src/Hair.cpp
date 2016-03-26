@@ -18,6 +18,9 @@ namespace RTHR {
 
 		m_device = device;
 
+		m_states = make_unique<CommonStates>(m_device->GetD3DDevice());
+		m_effect = make_shared<BasicEffect>(m_device->GetD3DDevice());
+
 		ID3D11DeviceContext* context = device->GetD3DDeviceContext();
 
 		switch (type)
@@ -182,8 +185,13 @@ namespace RTHR {
 
 		strandMesh.indexBuffer = g_pIndexBuffer;
 
+		strandMesh.indexCount = size * m_length;
+
+		strandMesh.vertexStride = 1;
+
 		strandMesh.primitiveType = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 
+		strandMesh.effect = m_effect;
 		//TODO create input layout, effect, start index, vertexOffset, vertexStride, indexCount, vbDecl, isAlpha
 
 		mesh->meshParts.push_back(make_unique<ModelMeshPart>(strandMesh));
@@ -196,11 +204,12 @@ namespace RTHR {
 					ID3D11ShaderResourceView* texture, bool wireframe, std::function<void()> setCustomState)
 	{
 		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
-		//m_guideStrands->Draw(m_device->GetD3DDeviceContext(),  )
+		m_guideStrands->Draw(m_device->GetD3DDeviceContext(), *m_states, world, view, proj, true);
 	}
 
 	void Hair::Reset()
 	{
 		m_geometry.reset();
+		m_states.reset();
 	}
 }
