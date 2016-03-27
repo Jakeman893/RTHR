@@ -9,7 +9,7 @@ cbuffer ModelViewProjectionConstantBuffer : register(b0)
 // Per-vertex data used as input to the vertex shader.
 struct VertexShaderInput
 {
-	float3 pos : POSITION;
+	float3 pos : SV_Position;
 	float3 color : COLOR0;
 };
 

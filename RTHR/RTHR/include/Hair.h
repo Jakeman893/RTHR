@@ -2,9 +2,13 @@
 #include "pch.h"
 #include "SimpleMath.h"
 #include "GeometricPrimitive.h"
+
 #include "Common\DeviceResources.h"
+#include "Common\DirectXHelper.h"
+#include "DirectXHelpers.h"
+
 #include "GeometricTypes.h"
-#include "Model.h"
+#include "PrimitiveBatch.h"
 #include "Effects.h"
 #include "CommonStates.h"
 
@@ -14,12 +18,6 @@ using namespace DirectX::SimpleMath;
 
 namespace RTHR
 {
-	// Redefinition for simpler readability
-	typedef vector<Vector3> HairStrand;
-
-	// A structure that simply defines the position of a vertex in the hair
-	typedef Vector4 HairVertex;
-
 	// This structure is used to define the position, normal, and tangent to a particular strand's root
 	// this is useful for extruding hair out of vertices from a particular "root"
 	struct StrandRoot
@@ -31,48 +29,6 @@ namespace RTHR
 		int length;
 	};
 
-	// Structure used to define the coordinate frame of the hair
-	struct coordFrame
-	{
-		Vector3 x;
-		Vector3 y;
-		Vector3 z;
-	};
-
-	// The type of interpolation that is used when multiplying hair strands across the triangles
-	enum INTERPOLATION_TYPE
-	{
-		HYBRID_TYPE,
-		MULTI_HYBRID_TYPE,
-		MULTISTRAND_TYPE,
-		SINGLESTRAND_TYPE,
-		NO_HAIR_TYPE,
-
-		NUM_INTERPOLATE_MODELS_TYPE
-	};
-
-	enum RENDERTYPE
-	{
-		INSTANCED_DEPTH,
-		INSTANCED_DENSITY,
-		INSTANCED_NORMAL_HAIR,
-		INSTANCED_INTERPOLATED_COLLISION,
-		INSTANCED_HAIR_DEPTHPASS,
-		INSTANCED_COLLISION_RESULTS,
-		SOATTRIBUTES,
-		INSTANCED_DEPTH_DOM,
-	};
-
-	enum INTERP_MODEL
-	{
-		HYBRID,
-		MULTI_HYBRID,
-		MULTISTRAND,
-		SINGLESTRAND,
-		NO_HAIR,
-		NUM_INTERPOLATE_MODELS
-	};
-
 	// The hair class that allows for the additon of a hair scalp to the scene with realistic hair
 	// simulated
 	class Hair
@@ -80,7 +36,7 @@ namespace RTHR
 	public:
 		//Constructors for the hair object
 		Hair();
-		Hair(GeometryType type, shared_ptr<DX::DeviceResources> device, float size, uint16 width, uint16 length);
+		Hair(GeometryType aType, shared_ptr<DX::DeviceResources> device, float aSize, uint16 width, uint16 length);
 		Hair(wchar_t const* dir, uint16 width, uint16 length);
 		
 		//Standard getter/setter functions
@@ -96,10 +52,19 @@ namespace RTHR
 					FXMVECTOR color = Colors::White, ID3D11ShaderResourceView* texture = (ID3D11ShaderResourceView*) nullptr,
 					bool wireframe = false, std::function<void()> setCustomState = nullptr);
 
+		//Creates the resources that the device needs to work
+		void CreateDeviceDependentResources();
+
 		// Resets the geometry object
 		void Reset();
 
 	private:
+		bool initDone = false;
+
+		float size;
+
+		GeometryType type;
+
 		// Width of strand
 		uint16 m_width;
 
@@ -112,22 +77,34 @@ namespace RTHR
 		// Holds the geometric solid that the strands are on
 		unique_ptr<GeometricPrimitive> m_geometry;
 		
-		// Holds the guidestrands of the hair mesh
-		unique_ptr<Model> m_guideStrands;
-
-		// List of the guideStrand hair vertexes
-		//unique_ptr<std::vector<HairStrand>> m_guideStrands;
-
-		// The texture coords of each hair strand
-		vector<Vector2> m_hairTexture;
-
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
-		shared_ptr<ModelMesh> genStrands();
+		void genStrands(const shared_ptr<VertexCollection> vert);
 
 		shared_ptr<DX::DeviceResources> m_device;
 
-		unique_ptr<CommonStates> m_states;
+		/**************************************************************/
+		/*Device Specific Pointers*************************************/
+		/**************************************************************/
+		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsVB;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsIB;
 
-		shared_ptr<IEffect> m_effect;
+
+		Microsoft::WRL::ComPtr<ID3D11VertexShader> strandsVS;
+		Microsoft::WRL::ComPtr<ID3D11PixelShader> strandsPS;
+		//Microsoft::WRL::ComPtr<ID3D11GeometryShader> strandsGS;
+		//Microsoft::WRL::ComPtr<ID3D11ComputeShader> strandsCS;
+
+		Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+
+		/**************************************************************/
+		/*Shader Strings for Loading***********************************/
+		/**************************************************************/
+		const wstring VS = L"HairVertex.cso";
+		const wstring PS = L"HairPixel.cso";
+		//const wstring GS = L"GeometryShader.cso";
+		//const wstring CS = L"ComputeShader.cso";
+
+
+		UINT vertexCount;
 	};
 }

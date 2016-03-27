@@ -97,7 +97,7 @@
     <ClInclude Include="include\TextConsole.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GeometricTypes.h">
+    <ClInclude Include="include\GeometricTypes.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -138,6 +138,12 @@
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairPixel.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairVertex.hlsl">
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

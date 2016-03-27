@@ -197,9 +197,9 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeometricTypes.h" />
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\Common\DeviceResources.h" />
+    <ClInclude Include="include\GeometricTypes.h" />
     <ClInclude Include="include\Hair.h" />
     <ClInclude Include="include\RTHRMain.h" />
     <ClInclude Include="include\Common\DirectXHelper.h" />
@@ -237,6 +237,15 @@
     <None Include="RTHR_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\HairPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairVertex.hlsl" />
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">
       <ShaderType>Pixel</ShaderType>
     </FxCompile>

@@ -121,5 +121,6 @@ void RTHRMain::OnDeviceRestored()
 	m_console->WriteLine(L"Device Restored");
 #endif
 	m_fpsTextRenderer->CreateDeviceDependentResources();
+	m_hair->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 }
