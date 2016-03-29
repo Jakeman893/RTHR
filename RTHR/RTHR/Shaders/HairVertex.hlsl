@@ -28,7 +28,7 @@ PixelShaderInput main(VertexShaderInput input)
 
 	// Transform the vertex position into projected space.
 	pos = mul(pos, model);
-	pos = mul(pos, view);
+	//pos = mul(pos, view);
 	pos = mul(pos, projection);
 	output.pos = pos;
 

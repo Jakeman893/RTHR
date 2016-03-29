@@ -7,6 +7,8 @@
 #include "Common\DirectXHelper.h"
 #include "DirectXHelpers.h"
 
+#include "Common\ShaderStructures.h"
+
 #include "GeometricTypes.h"
 #include "PrimitiveBatch.h"
 #include "Effects.h"
@@ -82,12 +84,18 @@ namespace RTHR
 
 		shared_ptr<DX::DeviceResources> m_device;
 
+		// Model View Projection
+		ModelViewProjectionConstantBuffer MVP;
+
 		/**************************************************************/
 		/*Device Specific Pointers*************************************/
 		/**************************************************************/
+		//Vertex Buffer
 		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsVB;
+		//Index Buffer
 		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsIB;
-
+		//Model view projection buffer
+		Microsoft::WRL::ComPtr<ID3D11Buffer> ModViewProjB;
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> strandsVS;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> strandsPS;

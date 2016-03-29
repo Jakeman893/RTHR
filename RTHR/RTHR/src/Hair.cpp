@@ -137,6 +137,18 @@ namespace RTHR {
 #pragma region Draw Hair
 		auto context = m_device->GetD3DDeviceContext();
 
+		MVP = ModelViewProjectionConstantBuffer(world, view, proj);
+
+		context->UpdateSubresource1(
+			ModViewProjB.Get(),
+			0,
+			NULL,
+			&MVP,
+			0,
+			0,
+			0
+			);
+
 		UINT stride = sizeof(VertexPositionColor);
 		UINT offset = 0;
 
@@ -154,7 +166,7 @@ namespace RTHR {
 			0
 			);
 
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 		context->IASetInputLayout(inputLayout.Get());
 
@@ -163,6 +175,14 @@ namespace RTHR {
 			strandsVS.Get(),
 			nullptr,
 			0
+			);
+
+		context->VSSetConstantBuffers1(
+			0,
+			1,
+			ModViewProjB.GetAddressOf(),
+			nullptr,
+			nullptr
 			);
 
 		//Attach pixel shader
@@ -218,6 +238,14 @@ namespace RTHR {
 					nullptr,
 					&strandsPS
 					)
+				);
+
+			CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
+			DX::ThrowIfFailed(
+				m_device->GetD3DDevice()->CreateBuffer(
+					&constantBufferDesc,
+					nullptr,
+					&ModViewProjB)
 				);
 		});
 #pragma endregion
@@ -291,5 +319,6 @@ namespace RTHR {
 		strandsIB.Reset();
 		inputLayout.Reset();
 		m_geometry.reset();
+		ModViewProjB.Reset();
 	}
 }

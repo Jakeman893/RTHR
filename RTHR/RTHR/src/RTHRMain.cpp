@@ -27,7 +27,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 
 	m_world = Matrix::Identity;
 
-	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+	m_view = Matrix::CreateLookAt(Vector3(5.f, 5.f, 5.f),
 		Vector3::Zero,
 		Vector3::UnitY);
 

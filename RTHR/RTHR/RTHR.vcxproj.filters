@@ -38,9 +38,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Sample3DSceneRenderer.cpp">
-      <Filter>Rendering Classes\Sample Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\FpsTextRenderer.cpp">
       <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClCompile>
@@ -62,11 +59,11 @@
     <ClCompile Include="src\TextConsole.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="include\Common\ShaderStructures.cpp">
+      <Filter>Rendering Classes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Sample3DSceneRenderer.h">
-      <Filter>Rendering Classes\Sample Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\FpsTextRenderer.h">
       <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClInclude>
