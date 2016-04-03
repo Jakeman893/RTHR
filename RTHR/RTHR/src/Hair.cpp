@@ -131,9 +131,6 @@ namespace RTHR {
 	{
 		if (!initDone)
 			return;
-
-		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
-
 #pragma region Draw Hair
 		auto context = m_device->GetD3DDeviceContext();
 
@@ -195,6 +192,8 @@ namespace RTHR {
 		// Draw
 		context->Draw(vertexCount, 0);
 #pragma endregion
+
+		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
 
 	}
 
