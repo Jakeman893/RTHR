@@ -19,6 +19,8 @@ namespace RTHR {
 		type = aType;
 		m_device = device;
 
+		states = make_unique<CommonStates>(m_device->GetD3DDevice());
+
 		CreateDeviceDependentResources();
 	}
 
@@ -189,11 +191,18 @@ namespace RTHR {
 			0
 			);
 
+		context->OMSetBlendState(states->Additive(), Colors::Black, 0xFFFFFFFF);
+		context->OMSetDepthStencilState(states->DepthNone(), 0);
+		context->RSSetState(states->Wireframe());
+
+		auto samplerState = states->LinearWrap();
+		context->PSSetSamplers(0, 1, &samplerState);
+
 		// Draw
 		context->Draw(vertexCount, 0);
 #pragma endregion
 
-		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
+		//m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
 
 	}
 
@@ -255,6 +264,8 @@ namespace RTHR {
 
 #pragma region Compute Shader
 		//TODO: Load a compute shader
+#pragma endregion
+
 #pragma endregion
 
 #pragma region Geometry Intialization

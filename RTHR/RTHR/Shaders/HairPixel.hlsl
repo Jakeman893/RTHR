@@ -1,3 +1,5 @@
+sampler Sampler : register(s0);
+
 // Per-pixel color data passed through the pixel shader.
 struct PixelShaderInput
 {

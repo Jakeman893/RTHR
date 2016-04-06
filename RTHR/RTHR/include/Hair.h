@@ -61,6 +61,8 @@ namespace RTHR
 		void Reset();
 
 	private:
+		unique_ptr<CommonStates> states;
+
 		bool initDone = false;
 
 		float size;

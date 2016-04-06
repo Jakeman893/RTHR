@@ -23,11 +23,13 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	m_console->WriteLine(L"Making geometry");
 #endif
 
-	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 5);
+	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 0);
 
 	m_world = Matrix::Identity;
 
-	m_view = Matrix::CreateLookAt(Vector3(5.f, 5.f, 5.f),
+//	m_view = Matrix::Identity;
+
+	m_view = Matrix::CreateLookAt(Vector3(1, 1, 0),
 		Vector3::Zero,
 		Vector3::UnitY);
 
@@ -47,7 +49,7 @@ void RTHRMain::CreateWindowSizeDependentResources()
 #ifdef _DEBUG
 	m_console->SetWindow(SimpleMath::Viewport::ComputeTitleSafeArea(size.Width, size.Height));
 #endif
-	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, (size.Width/size.Height), 0.1f, 10.f);
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, (size.Width/size.Height), FLT_EPSILON, 10.f);
 }
 
 // Updates the application state once per frame.
