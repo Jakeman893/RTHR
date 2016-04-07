@@ -13,7 +13,7 @@ namespace RTHR {
 
 	Hair::Hair(GeometryType aType, shared_ptr<DX::DeviceResources> device, float aSize, uint16 width, uint16 length)
 	{
-		size = aSize;
+		geomSize = aSize;
 		m_width = width;
 		m_length = length;
 		type = aType;
@@ -136,10 +136,12 @@ namespace RTHR {
 #pragma region Draw Hair
 		auto context = m_device->GetD3DDeviceContext();
 
-		MVP = ModelViewProjectionConstantBuffer(world, view, proj);
+		auto worldView = XMMatrixMultiply(world, view);
+
+		worldViewProjConstant = XMMatrixTranspose(XMMatrixMultiply(worldView, proj));
 
 		context->UpdateSubresource1(
-			ModViewProjB.Get(),
+			paramsConstant.Get(),
 			0,
 			NULL,
 			&MVP,
@@ -179,7 +181,7 @@ namespace RTHR {
 		context->VSSetConstantBuffers1(
 			0,
 			1,
-			ModViewProjB.GetAddressOf(),
+			paramsConstant.GetAddressOf(),
 			nullptr,
 			nullptr
 			);
@@ -247,14 +249,6 @@ namespace RTHR {
 					&strandsPS
 					)
 				);
-
-			CD3D11_BUFFER_DESC constantBufferDesc(sizeof(ModelViewProjectionConstantBuffer), D3D11_BIND_CONSTANT_BUFFER);
-			DX::ThrowIfFailed(
-				m_device->GetD3DDevice()->CreateBuffer(
-					&constantBufferDesc,
-					nullptr,
-					&ModViewProjB)
-				);
 		});
 #pragma endregion
 
@@ -266,6 +260,14 @@ namespace RTHR {
 		//TODO: Load a compute shader
 #pragma endregion
 
+#pragma region Constant Buffer Initialization
+		CD3D11_BUFFER_DESC constantBufferDesc(sizeof(BasicEffectConstants), D3D11_BIND_CONSTANT_BUFFER);
+		DX::ThrowIfFailed(
+			m_device->GetD3DDevice()->CreateBuffer(
+				&constantBufferDesc,
+				nullptr,
+				&paramsConstant)
+		);
 #pragma endregion
 
 #pragma region Geometry Intialization
@@ -274,40 +276,40 @@ namespace RTHR {
 		switch (type)
 		{
 		case(BOX) :
-			m_geometry = GeometricPrimitive::CreateBox(context, XMFLOAT3(size, size, size));
+			m_geometry = GeometricPrimitive::CreateBox(context, XMFLOAT3(geomSize, geomSize, geomSize));
 			break;
 		case(CUBE) :
-			m_geometry = GeometricPrimitive::CreateCube(context, size);
+			m_geometry = GeometricPrimitive::CreateCube(context, geomSize);
 			break;
 		case(SPHERE) :
-			m_geometry = GeometricPrimitive::CreateSphere(context, size);
+			m_geometry = GeometricPrimitive::CreateSphere(context, geomSize);
 			break;
 		case(GEOSPHERE) :
-			m_geometry = GeometricPrimitive::CreateGeoSphere(context, size);
+			m_geometry = GeometricPrimitive::CreateGeoSphere(context, geomSize);
 			break;
 		case(CYLINDER) :
-			m_geometry = GeometricPrimitive::CreateCylinder(context, size);
+			m_geometry = GeometricPrimitive::CreateCylinder(context, geomSize);
 			break;
 		case(CONE) :
-			m_geometry = GeometricPrimitive::CreateCone(context, size);
+			m_geometry = GeometricPrimitive::CreateCone(context, geomSize);
 			break;
 		case(TORUS) :
-			m_geometry = GeometricPrimitive::CreateTorus(context, size);
+			m_geometry = GeometricPrimitive::CreateTorus(context, geomSize);
 			break;
 		case(TETRAHEDRON) :
-			m_geometry = GeometricPrimitive::CreateTetrahedron(context, size);
+			m_geometry = GeometricPrimitive::CreateTetrahedron(context, geomSize);
 			break;
 		case(OCTAHEDRON) :
-			m_geometry = GeometricPrimitive::CreateOctahedron(context, size);
+			m_geometry = GeometricPrimitive::CreateOctahedron(context, geomSize);
 			break;
 		case(DOCDECAHEDRON) :
-			m_geometry = GeometricPrimitive::CreateDodecahedron(context, size);
+			m_geometry = GeometricPrimitive::CreateDodecahedron(context, geomSize);
 			break;
 		case(ICOSAHEDRON) :
-			m_geometry = GeometricPrimitive::CreateIcosahedron(context, size);
+			m_geometry = GeometricPrimitive::CreateIcosahedron(context, geomSize);
 			break;
 		case(TEAPOT) :
-			m_geometry = GeometricPrimitive::CreateTeapot(context, size);
+			m_geometry = GeometricPrimitive::CreateTeapot(context, geomSize);
 			break;
 		default:
 			throw invalid_argument("The provided type is not implemented!");
@@ -318,6 +320,7 @@ namespace RTHR {
 
 		genStrands(vert);
 #pragma endregion
+
 		initDone = true;
 	}
 
@@ -329,6 +332,6 @@ namespace RTHR {
 		strandsIB.Reset();
 		inputLayout.Reset();
 		m_geometry.reset();
-		ModViewProjB.Reset();
+		paramsConstant.Reset();
 	}
 }

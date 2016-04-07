@@ -65,9 +65,7 @@ namespace RTHR
 
 		bool initDone = false;
 
-		float size;
-
-		GeometryType type;
+		UINT vertexCount;
 
 		// Width of strand
 		uint16 m_width;
@@ -78,26 +76,31 @@ namespace RTHR
 		// Count of wisps
 		uint16 m_wispCount;
 		
-		// Holds the geometric solid that the strands are on
-		unique_ptr<GeometricPrimitive> m_geometry;
-		
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
 		void genStrands(const shared_ptr<VertexCollection> vert);
 
-		shared_ptr<DX::DeviceResources> m_device;
-
 		// Model View Projection
-		ModelViewProjectionConstantBuffer MVP;
+		BasicEffectConstants constParams;
+
+		/**************************************************************/
+		/*Under hair geometry properties*******************************/
+		/**************************************************************/
+		float geomSize;
+		GeometryType type;
+		// Holds the geometric solid that the strands are on
+		unique_ptr<GeometricPrimitive> m_geometry;
 
 		/**************************************************************/
 		/*Device Specific Pointers*************************************/
 		/**************************************************************/
+		//The device
+		shared_ptr<DX::DeviceResources> m_device;
 		//Vertex Buffer
 		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsVB;
 		//Index Buffer
 		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsIB;
 		//Model view projection buffer
-		Microsoft::WRL::ComPtr<ID3D11Buffer> ModViewProjB;
+		Microsoft::WRL::ComPtr<ID3D11Buffer> paramsConstant;
 
 		Microsoft::WRL::ComPtr<ID3D11VertexShader> strandsVS;
 		Microsoft::WRL::ComPtr<ID3D11PixelShader> strandsPS;
@@ -113,8 +116,5 @@ namespace RTHR
 		const wstring PS = L"HairPixel.cso";
 		//const wstring GS = L"GeometryShader.cso";
 		//const wstring CS = L"ComputeShader.cso";
-
-
-		UINT vertexCount;
 	};
 }
