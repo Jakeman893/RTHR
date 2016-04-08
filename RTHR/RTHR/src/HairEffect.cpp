@@ -1,3 +1,4 @@
+#include "pch.h"
 #include "HairEffect.h"
 #include "EffectCommon.h"
 
@@ -17,9 +18,6 @@ namespace RTHR
 		XMVECTOR lightSpecularColor[IEffectLights::MaxDirectionalLights];
 
 		XMVECTOR eyePosition;
-
-		XMVECTOR fogColor;
-		XMVECTOR fogVector;
 
 		XMMATRIX world;
 		XMVECTOR worldInverseTranspose[3];

@@ -11,7 +11,7 @@
 
 #include "GeometricTypes.h"
 #include "PrimitiveBatch.h"
-#include "Effects.h"
+#include "HairEffect.h"
 #include "CommonStates.h"
 
 using namespace std;
@@ -79,8 +79,7 @@ namespace RTHR
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
 		void genStrands(const shared_ptr<VertexCollection> vert);
 
-		// Model View Projection
-		BasicEffectConstants constParams;
+		unique_ptr<HairEffect> hairEffect;
 
 		/**************************************************************/
 		/*Under hair geometry properties*******************************/

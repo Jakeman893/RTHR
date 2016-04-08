@@ -54,7 +54,7 @@ namespace RTHR {
 	{
 #pragma region Hair Extrusion		
 		// Initialize the list of hair strand vertices
-		vector<VertexPositionColor> strands = vector<VertexPositionColor>();
+		vector<VertexPositionNormalColor> strands = vector<VertexPositionNormalColor>();
 
 		// Iterates over the vertices in the geometry extruding points along normal direction
 		// The distance between vertices will be resolved on GPU for LOD however an arbitrary 1
@@ -65,12 +65,12 @@ namespace RTHR {
 		{
 			Vector3 direction = vert->at(i).normal;
 			Vector3 position = vert->at(i).position;
-			strands.push_back(VertexPositionColor(position, Colors::Brown));
+			strands.push_back(VertexPositionNormalColor(position, direction, Colors::Brown));
 			for (uint32_t j = 1; j < m_length; j++)
 			{
 				//In the future, this should use UV texture map in order to paint length weight onto the object
 				position += direction;
-				strands.push_back(VertexPositionColor(position, Colors::Brown));
+				strands.push_back(VertexPositionNormalColor(position, direction, Colors::Brown));
 			}
 			roots[i] = strands.size();
 		}
@@ -86,7 +86,7 @@ namespace RTHR {
 		// Description of the vertex buffer
 		D3D11_BUFFER_DESC vertBufferDesc;
 		vertBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vertBufferDesc.ByteWidth = sizeof(VertexPositionColor) * vertexCount;
+		vertBufferDesc.ByteWidth = sizeof(VertexPositionNormalColor) * vertexCount;
 		vertBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 		vertBufferDesc.CPUAccessFlags = 0;
 		vertBufferDesc.MiscFlags = 0;
@@ -138,19 +138,19 @@ namespace RTHR {
 
 		auto worldView = XMMatrixMultiply(world, view);
 
-		worldViewProjConstant = XMMatrixTranspose(XMMatrixMultiply(worldView, proj));
+		auto worldViewProjConstant = XMMatrixTranspose(XMMatrixMultiply(worldView, proj));
 
 		context->UpdateSubresource1(
 			paramsConstant.Get(),
 			0,
 			NULL,
-			&MVP,
+			&worldViewProjConstant,
 			0,
 			0,
 			0
 			);
 
-		UINT stride = sizeof(VertexPositionColor);
+		UINT stride = sizeof(VertexPositionNormalColor);
 		UINT offset = 0;
 
 		context->IASetVertexBuffers(
@@ -228,8 +228,8 @@ namespace RTHR {
 
 			DX::ThrowIfFailed(
 				m_device->GetD3DDevice()->CreateInputLayout(
-					VertexPositionColor::InputElements,
-					VertexPositionColor::InputElementCount,
+					VertexPositionNormalColor::InputElements,
+					VertexPositionNormalColor::InputElementCount,
 					&fileData[0],
 					fileData.size(),
 					&inputLayout
