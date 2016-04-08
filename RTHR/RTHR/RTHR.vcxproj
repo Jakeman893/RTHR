@@ -167,7 +167,7 @@
     <ClCompile>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)pch.pch</PrecompiledHeaderOutputFile>
-      <AdditionalIncludeDirectories>include;$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)..\DirectXTK\Inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>include;$(ProjectDir);$(IntermediateOutputPath);$(SolutionDir)..\DirectXTK\Inc;$(SolutionDir)..\DirectXTK\Src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <DisableSpecificWarnings>4453;28204</DisableSpecificWarnings>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -197,27 +197,27 @@
     <Image Include="Assets\Wide310x150Logo.scale-200.png" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GeometricTypes.h" />
     <ClInclude Include="include\App.h" />
     <ClInclude Include="include\Common\DeviceResources.h" />
+    <ClInclude Include="include\GeometricTypes.h" />
     <ClInclude Include="include\Hair.h" />
+    <ClInclude Include="include\HairEffect.h" />
     <ClInclude Include="include\RTHRMain.h" />
     <ClInclude Include="include\Common\DirectXHelper.h" />
     <ClInclude Include="include\Common\StepTimer.h" />
-    <ClInclude Include="include\Sample3DSceneRenderer.h" />
     <ClInclude Include="include\FpsTextRenderer.h" />
     <ClInclude Include="include\Common\ShaderStructures.h" />
     <ClInclude Include="include\pch.h" />
     <ClInclude Include="include\TextConsole.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Common\ShaderStructures.cpp" />
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="include\Common\DeviceResources.cpp" />
     <ClCompile Include="src\Hair.cpp" />
-    <ClCompile Include="src\LoadMayaHair.cpp" />
+    <ClCompile Include="src\HairEffect.cpp" />
     <ClCompile Include="src\RTHRMain.cpp" />
     <ClCompile Include="src\FpsTextRenderer.cpp" />
-    <ClCompile Include="src\Sample3DSceneRenderer.cpp" />
     <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -238,16 +238,23 @@
     <None Include="RTHR_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="Shaders\HairPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|ARM'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">
       <ShaderType>Pixel</ShaderType>
     </FxCompile>
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
       <ShaderType>Vertex</ShaderType>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\Models\Basehead.fbx" />
-    <MeshContentTask Include="Assets\Models\Triangle.fbx" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\HairResources\hair.txt" />

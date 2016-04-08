@@ -38,9 +38,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Sample3DSceneRenderer.cpp">
-      <Filter>Rendering Classes\Sample Scene</Filter>
-    </ClCompile>
     <ClCompile Include="src\FpsTextRenderer.cpp">
       <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClCompile>
@@ -59,17 +56,17 @@
     <ClCompile Include="src\Hair.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\LoadMayaHair.cpp">
+    <ClCompile Include="src\TextConsole.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="src\TextConsole.cpp">
+    <ClCompile Include="include\Common\ShaderStructures.cpp">
+      <Filter>Rendering Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="src\HairEffect.cpp">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Sample3DSceneRenderer.h">
-      <Filter>Rendering Classes\Sample Scene</Filter>
-    </ClInclude>
     <ClInclude Include="include\FpsTextRenderer.h">
       <Filter>Rendering Classes\FPS Text Renderer</Filter>
     </ClInclude>
@@ -100,7 +97,10 @@
     <ClInclude Include="include\TextConsole.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="GeometricTypes.h">
+    <ClInclude Include="include\GeometricTypes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\HairEffect.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -143,14 +143,12 @@
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <MeshContentTask Include="Assets\Models\Triangle.fbx">
-      <Filter>Assets\Models</Filter>
-    </MeshContentTask>
-    <MeshContentTask Include="Assets\Models\Basehead.fbx">
-      <Filter>Assets\Models</Filter>
-    </MeshContentTask>
+    <FxCompile Include="Shaders\HairPixel.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairVertex.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Assets\HairResources\hair.txt">

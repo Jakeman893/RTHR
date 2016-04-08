@@ -14,49 +14,52 @@ using std::shared_ptr;
 using std::unique_ptr;
 using std::vector;
 
-class TextConsole
-{
-public:
-	TextConsole();
-	TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName);
+namespace DirectX {
+	class TextConsole
+	{
+	public:
+		TextConsole();
+		TextConsole(ID3D11DeviceContext* context, const wchar_t* fontName);
 
-	void Render();
+		void Render();
 
-	void Clear();
+		void Clear();
 
-	void Write(const wchar_t *str);
-	void WriteLine(const wchar_t *str);
-	void Format(const wchar_t *strFormat, ...);
+		void Write(const wchar_t *str);
+		void WriteLine(const wchar_t *str);
+		void Format(const wchar_t *strFormat, ...);
 
-	void SetWindow(const RECT& layout);
+		void SetWindow(const RECT& layout);
 
-	void XM_CALLCONV SetForegroundColor(DirectX::FXMVECTOR color) { DirectX::XMStoreFloat4(&m_textColor, color); }
+		void XM_CALLCONV SetForegroundColor(DirectX::FXMVECTOR color) { DirectX::XMStoreFloat4(&m_textColor, color); }
 
-	void ReleaseDevice();
-	void RestoreDevice(ID3D11DeviceContext* context ,const wchar_t* fontName);
+		void ReleaseDevice();
+		void RestoreDevice(ID3D11DeviceContext* context, const wchar_t* fontName);
 
-private:
-	void ProcessString(const wchar_t* str);
-	void IncrementLine();
+	private:
+		void ProcessString(const wchar_t* str);
+		void IncrementLine();
 
-	RECT											m_layout;
-	DirectX::XMFLOAT4								m_textColor;
+		RECT											m_layout;
+		DirectX::XMFLOAT4								m_textColor;
 
-	unsigned int									m_columns;
-	unsigned int									m_rows;
-	unsigned int									m_currentColumn;
-	unsigned int									m_currentLine;
-	
-	unique_ptr<wchar_t[]>							m_buffer;
-	unique_ptr<wchar_t*[]>							m_lines;
-	vector<wchar_t>									m_tempBuffer;
+		unsigned int									m_columns;
+		unsigned int									m_rows;
+		unsigned int									m_currentColumn;
+		unsigned int									m_currentLine;
 
-	unique_ptr<DirectX::SpriteBatch>				m_batch;
-	unique_ptr<DirectX::SpriteFont>					m_font;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_context;
+		unique_ptr<wchar_t[]>							m_buffer;
+		unique_ptr<wchar_t*[]>							m_lines;
+		vector<wchar_t>									m_tempBuffer;
 
-	std::mutex										m_mutex;
-};
+		unique_ptr<DirectX::SpriteBatch>				m_batch;
+		unique_ptr<DirectX::SpriteFont>					m_font;
+		Microsoft::WRL::ComPtr<ID3D11DeviceContext>		m_context;
 
-//Global TextConsole object so the console can be used by any
-static unique_ptr<TextConsole> m_console = std::make_unique<TextConsole>();
+		std::mutex										m_mutex;
+	};
+
+	//Global TextConsole object so the console can be used by any
+	static unique_ptr<TextConsole> m_console = std::make_unique<TextConsole>();
+
+}
