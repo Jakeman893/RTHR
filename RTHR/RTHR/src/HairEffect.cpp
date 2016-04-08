@@ -47,6 +47,7 @@ namespace RTHR
 		bool vertexColorEnabled;
 		bool lightingEnabled;
 		bool textureEnabled;
+		bool preferPerPixelLighting;
 
 		EffectLights lights;
 		
@@ -107,5 +108,140 @@ namespace RTHR
 	void HairEffect::Apply(_In_ ID3D11DeviceContext* deviceContext)
 	{
 		pImpl->Apply(deviceContext);
+	}
+
+	void HairEffect::GetVertexShaderBytecode(_Out_ void const** pShaderByteCode, _Out_ size_t* pByteCodeLength)
+	{
+//		pImpl->GetVertexShaderBytecode()
+	}
+
+	void XM_CALLCONV HairEffect::SetWorld(FXMMATRIX value)
+	{
+		pImpl->matrices.world = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::WorldViewProj | EffectDirtyFlags::WorldInverseTranspose | EffectDirtyFlags::FogVector;
+	}
+
+	void XM_CALLCONV HairEffect::SetView(FXMMATRIX value)
+	{
+		pImpl->matrices.view = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::WorldViewProj | EffectDirtyFlags::EyePosition | EffectDirtyFlags::FogVector;
+	}
+
+	void XM_CALLCONV HairEffect::SetProjection(FXMMATRIX value)
+	{
+		pImpl->matrices.projection = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::WorldViewProj;
+	}
+
+	void XM_CALLCONV HairEffect::SetDiffuseColor(FXMVECTOR value)
+	{
+		pImpl->lights.diffuseColor = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::MaterialColor;
+	}
+
+	void XM_CALLCONV HairEffect::SetEmissiveColor(FXMVECTOR value)
+	{
+		pImpl->lights.emissiveColor = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::MaterialColor;
+	}
+
+	void XM_CALLCONV HairEffect::SetSpecularColor(FXMVECTOR value)
+	{
+		// Set xyz to new value, but preserve existing w (specular power)
+		pImpl->constants.specularColorAndPower = XMVectorSelect(pImpl->constants.specularColorAndPower, value, g_XMSelect1110);
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::ConstantBuffer;
+	}
+
+	void HairEffect::SetSpecularPower(float value)
+	{
+		// Set w to new value, but preserve existing specular color
+		pImpl->constants.specularColorAndPower = XMVectorSetW(pImpl->constants.specularColorAndPower, value);
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::ConstantBuffer;
+	}
+
+	void HairEffect::DisableSpecular()
+	{
+		// Set specular color to black
+
+		pImpl->constants.specularColorAndPower = g_XMIdentityR3;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::ConstantBuffer;
+	}
+
+	void HairEffect::SetAlpha(float value)
+	{
+		pImpl->lights.alpha = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::MaterialColor;
+	}
+
+	void HairEffect::SetLightingEnabled(bool value)
+	{
+		pImpl->lightingEnabled = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::MaterialColor;
+	}
+
+	void HairEffect::SetPerPixelLighting(bool value)
+	{
+		pImpl->preferPerPixelLighting = value;
+	}
+
+	void XM_CALLCONV HairEffect::SetAmbientLightColor(FXMVECTOR value)
+	{
+		pImpl->lights.ambientLightColor = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::MaterialColor;
+	}
+
+	void HairEffect::SetLightEnabled(int whichLight, bool value)
+	{
+		pImpl->dirtyFlags |= pImpl->lights.SetLightEnabled(whichLight, value, pImpl->constants.lightDiffuseColor, pImpl->constants.lightSpecularColor);
+	}
+
+	void XM_CALLCONV HairEffect::SetLightDirection(int whichLight, FXMVECTOR value)
+	{
+		EffectLights::ValidateLightIndex(whichLight);
+
+		pImpl->constants.lightDirection[whichLight] = value;
+
+		pImpl->dirtyFlags |= EffectDirtyFlags::ConstantBuffer;
+	}
+
+	void XM_CALLCONV HairEffect::SetLightDiffuseColor(int whichLight, FXMVECTOR value)
+	{
+		pImpl->dirtyFlags |= pImpl->lights.SetLightDiffuseColor(whichLight, value, pImpl->constants.lightDiffuseColor);
+	}
+
+	void XM_CALLCONV HairEffect::SetLightSpecularColor(int whichLight, FXMVECTOR value)
+	{
+		pImpl->dirtyFlags |= pImpl->lights.SetLightSpecularColor(whichLight, value, pImpl->constants.lightSpecularColor);
+	}
+
+	void HairEffect::EnableDefaultLighting()
+	{
+		EffectLights::EnableDefaultLighting(this);
+	}
+
+	void HairEffect::SetVertexColorEnabled(bool value)
+	{
+		pImpl->vertexColorEnabled = value;
+	}
+
+	void HairEffect::SetTextureEnabled(bool value)
+	{
+		pImpl->textureEnabled = value;
+	}
+
+	void HairEffect::SetTexture(_In_opt_ ID3D11ShaderResourceView* value)
+	{
+		pImpl->texture = value;
 	}
 }
