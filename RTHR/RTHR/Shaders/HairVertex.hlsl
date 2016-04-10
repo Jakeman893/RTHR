@@ -2,19 +2,19 @@
 cbuffer Parameters : register(b0)
 {
 	float4 DiffuseColor				: packoffset(c0);
-	float3 EmissiveColor			: packoffset(c1);
-	float3 SpecularColor			: packoffset(c2);
-	float SpecularPower				: packoffset(c2.w);
+	//float3 EmissiveColor			: packoffset(c1);
+	//float3 SpecularColor			: packoffset(c2);
+	//float SpecularPower				: packoffset(c2.w);
 
-	float3 LightDirection[3]		: packoffset(c3);
-	float3 LightDiffuseColor[3]		: packoffset(c6);
-	float3 LightSpecularColor[3]	: packoffset(c9);
+	//float3 LightDirection[3]		: packoffset(c3);
+	//float3 LightDiffuseColor[3]		: packoffset(c6);
+	//float3 LightSpecularColor[3]	: packoffset(c9);
 
-	float3 EyePosition				: packoffset(c12);
+	float3 EyePosition				: packoffset(c1);
 
-	float4x4 World					: packoffset(c13);
-	float3x3 WorldInverseTranspose	: packoffset(c17);
-	float4x4 WorldViewProj			: packoffset(c20);
+	float4x4 World					: packoffset(c2);
+	float3x3 WorldInverseTranspose	: packoffset(c6);
+	float4x4 WorldViewProj			: packoffset(c9);
 };
 
 // Per-vertex data used as input to the vertex shader.

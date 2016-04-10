@@ -62,9 +62,6 @@
     <ClCompile Include="include\Common\ShaderStructures.cpp">
       <Filter>Rendering Classes</Filter>
     </ClCompile>
-    <ClCompile Include="src\HairEffect.cpp">
-      <Filter>Source</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FpsTextRenderer.h">
@@ -98,9 +95,6 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="include\GeometricTypes.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\HairEffect.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>

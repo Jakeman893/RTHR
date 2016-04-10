@@ -27,9 +27,9 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 
 	m_world = Matrix::Identity;
 
-//	m_view = Matrix::Identity;
+	eye = Vector3(1, 1, 0);
 
-	m_view = Matrix::CreateLookAt(Vector3(1, 1, 0),
+	m_view = Matrix::CreateLookAt(eye,
 		Vector3::Zero,
 		Vector3::UnitY);
 
@@ -94,7 +94,7 @@ bool RTHRMain::Render()
 	// TODO: Replace this with your app's content rendering functions.
 	m_fpsTextRenderer->Render();
 
-	m_hair->Draw(m_world, m_view, m_proj);
+	m_hair->Draw(m_world, m_view, m_proj, eye);
 
 #ifdef _DEBUG
 	m_console->Render();

@@ -19,6 +19,7 @@ namespace RTHR {
 		type = aType;
 		m_device = device;
 
+		matrices = EffectMatrices();
 		states = make_unique<CommonStates>(m_device->GetD3DDevice());
 
 		CreateDeviceDependentResources();
@@ -128,27 +129,33 @@ namespace RTHR {
 #pragma endregion
 	}
 
-	void Hair::Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, FXMVECTOR color, 
+	void Hair::Draw(Matrix world, Matrix view, Matrix proj, Vector3 eye, FXMVECTOR color,
 					ID3D11ShaderResourceView* texture, bool wireframe, std::function<void()> setCustomState)
 	{
 		if (!initDone)
 			return;
-#pragma region Draw Hair
+
 		auto context = m_device->GetD3DDeviceContext();
+		dirtyFlags = EffectDirtyFlags::WorldViewProj;
+#pragma region Update Constant Buffer
+		HairEffectConstants update = HairEffectConstants();
+		update.diffuseColor = color;
+		update.eyePosition = eye;
+		update.world = world;
 
-		auto worldView = XMMatrixMultiply(world, view);
+		XMMATRIX worldViewProjConstant;
 
-		auto worldViewProjConstant = XMMatrixTranspose(XMMatrixMultiply(worldView, proj));
+		matrices.world = world;
+		matrices.view = view;
+		matrices.projection = proj;
+		matrices.SetConstants(dirtyFlags, worldViewProjConstant);
 
-		context->UpdateSubresource1(
-			paramsConstant.Get(),
-			0,
-			NULL,
-			&worldViewProjConstant,
-			0,
-			0,
-			0
-			);
+		update.worldViewProj = worldViewProjConstant;
+
+		constBuf->SetData(context, update);
+
+#pragma endregion
+#pragma region Draw Hair
 
 		UINT stride = sizeof(VertexPositionNormalColor);
 		UINT offset = 0;
@@ -181,7 +188,7 @@ namespace RTHR {
 		context->VSSetConstantBuffers1(
 			0,
 			1,
-			paramsConstant.GetAddressOf(),
+			constBuf->GetBufferAddress(),
 			nullptr,
 			nullptr
 			);
@@ -204,7 +211,7 @@ namespace RTHR {
 		context->Draw(vertexCount, 0);
 #pragma endregion
 
-		//m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
+		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
 
 	}
 
@@ -260,14 +267,16 @@ namespace RTHR {
 		//TODO: Load a compute shader
 #pragma endregion
 
-#pragma region Constant Buffer Initialization
-		CD3D11_BUFFER_DESC constantBufferDesc(sizeof(BasicEffectConstants), D3D11_BIND_CONSTANT_BUFFER);
-		DX::ThrowIfFailed(
-			m_device->GetD3DDevice()->CreateBuffer(
-				&constantBufferDesc,
-				nullptr,
-				&paramsConstant)
-		);
+#pragma region Constant Buffer
+
+		matrices.projection = Matrix::Identity;
+		matrices.view = Matrix::Identity;
+		matrices.world = Matrix::Identity;
+
+		auto a = sizeof(HairEffectConstants);
+
+		constBuf = make_unique<ConstantBuffer<HairEffectConstants>>(m_device->GetD3DDevice());
+
 #pragma endregion
 
 #pragma region Geometry Intialization
@@ -332,6 +341,6 @@ namespace RTHR {
 		strandsIB.Reset();
 		inputLayout.Reset();
 		m_geometry.reset();
-		paramsConstant.Reset();
+		constBuf.reset();
 	}
 }

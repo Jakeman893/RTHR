@@ -201,7 +201,6 @@
     <ClInclude Include="include\Common\DeviceResources.h" />
     <ClInclude Include="include\GeometricTypes.h" />
     <ClInclude Include="include\Hair.h" />
-    <ClInclude Include="include\HairEffect.h" />
     <ClInclude Include="include\RTHRMain.h" />
     <ClInclude Include="include\Common\DirectXHelper.h" />
     <ClInclude Include="include\Common\StepTimer.h" />
@@ -215,7 +214,6 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="include\Common\DeviceResources.cpp" />
     <ClCompile Include="src\Hair.cpp" />
-    <ClCompile Include="src\HairEffect.cpp" />
     <ClCompile Include="src\RTHRMain.cpp" />
     <ClCompile Include="src\FpsTextRenderer.cpp" />
     <ClCompile Include="src\pch.cpp">
