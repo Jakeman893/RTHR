@@ -135,6 +135,8 @@ namespace RTHR {
 		if (!initDone)
 			return;
 
+		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
+
 		auto context = m_device->GetD3DDeviceContext();
 		dirtyFlags = EffectDirtyFlags::WorldViewProj;
 #pragma region Update Constant Buffer
@@ -210,9 +212,6 @@ namespace RTHR {
 		// Draw
 		context->Draw(vertexCount, 0);
 #pragma endregion
-
-		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
-
 	}
 
 	void Hair::CreateDeviceDependentResources()
