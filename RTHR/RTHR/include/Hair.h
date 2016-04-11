@@ -8,8 +8,6 @@
 #include "DirectXHelpers.h"
 #include "EffectCommon.h"
 
-#include "Common\ShaderStructures.h"
-
 #include "GeometricTypes.h"
 #include "PrimitiveBatch.h"
 #include "HairEffect.h"

@@ -59,9 +59,6 @@
     <ClCompile Include="src\TextConsole.cpp">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="include\Common\ShaderStructures.cpp">
-      <Filter>Rendering Classes</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\FpsTextRenderer.h">
@@ -72,9 +69,6 @@
     </ClInclude>
     <ClInclude Include="include\Common\DirectXHelper.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="include\Common\ShaderStructures.h">
-      <Filter>Rendering Classes</Filter>
     </ClInclude>
     <ClInclude Include="include\RTHRMain.h">
       <Filter>Headers</Filter>
@@ -141,6 +135,12 @@
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairVertex.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairGeometry.hlsl">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\HairCompute.hlsl">
       <Filter>Rendering Classes\Shaders</Filter>
     </FxCompile>
   </ItemGroup>

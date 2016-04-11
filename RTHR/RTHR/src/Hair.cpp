@@ -176,7 +176,7 @@ namespace RTHR {
 			0
 			);
 
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 		context->IASetInputLayout(inputLayout.Get());
 
@@ -202,12 +202,19 @@ namespace RTHR {
 			0
 			);
 
+#pragma region Rasterizer/DepthStencil/Blend/Sampler States
+
+		// Sets the blend state of the primitive to be drawn (hair)
 		context->OMSetBlendState(states->Additive(), Colors::Black, 0xFFFFFFFF);
-		context->OMSetDepthStencilState(states->DepthNone(), 0);
+		// Sets the depth stencil state
+		context->OMSetDepthStencilState(states->DepthDefault(), 0);
+		// Sets the rasterizer state
 		context->RSSetState(states->Wireframe());
 
 		auto samplerState = states->LinearWrap();
 		context->PSSetSamplers(0, 1, &samplerState);
+
+#pragma endregion
 
 		// Draw
 		context->Draw(vertexCount, 0);

@@ -23,7 +23,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	m_console->WriteLine(L"Making geometry");
 #endif
 
-	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 0);
+	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 2);
 
 	m_world = Matrix::Identity;
 
@@ -85,7 +85,7 @@ bool RTHRMain::Render()
 	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
 
 	// Clear the back buffer and depth stencil view.
-	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
+	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), Colors::DarkGray);
 	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 #pragma endregion
 
@@ -94,7 +94,7 @@ bool RTHRMain::Render()
 	// TODO: Replace this with your app's content rendering functions.
 	m_fpsTextRenderer->Render();
 
-	m_hair->Draw(m_world, m_view, m_proj, eye);
+	m_hair->Draw(m_world, m_view, m_proj, eye, Colors::RosyBrown);
 
 #ifdef _DEBUG
 	m_console->Render();

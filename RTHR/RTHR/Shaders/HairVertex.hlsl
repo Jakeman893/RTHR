@@ -21,6 +21,7 @@ cbuffer Parameters : register(b0)
 struct VertexShaderInput
 {
 	float3 pos : SV_Position;
+	float norm : NORMAL;
 	float3 color : COLOR0;
 };
 
@@ -38,10 +39,12 @@ PixelShaderInput main(VertexShaderInput input)
 	float4 pos = float4(input.pos, 1.0f);
 
 	// Transform the vertex position into projected space.
-	pos = mul(pos, WorldViewProj);
-	output.pos = pos;
+	output.pos = mul(pos, WorldViewProj);
 
 	// Pass the color through without modification.
+	//output.color = DiffuseColor;
+
+	// Uncomment for per-vertex color
 	output.color = input.color;
 
 	return output;
