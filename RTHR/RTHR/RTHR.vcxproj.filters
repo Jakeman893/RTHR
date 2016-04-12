@@ -123,6 +123,9 @@
     <None Include="Assets\Fonts\consolas.spritefont">
       <Filter>Assets</Filter>
     </None>
+    <None Include="Shaders\HairHeader.hlsli">
+      <Filter>Rendering Classes\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">

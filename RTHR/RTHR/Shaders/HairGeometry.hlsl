@@ -1,17 +1,8 @@
-struct GSOutput
-{
-	float4 pos : SV_POSITION;
-	float2 TexCoord : TEXCOORD;
-};
-
-struct GSInput
-{
-	float4 pos : SV_POSITION;
-};
+#include "HairHeader.hlsli"
 
 [maxvertexcount(6)]
 void main(
-	line GSInput input[2], 
+	line GSInput points[2], 
 	inout TriangleStream< GSOutput > output
 )
 {
@@ -19,10 +10,55 @@ void main(
 	float4 p1 = points[1].pos;
 
 	float w0 = p0.w;
-	for (uint i = 0; i < 3; i++)
-	{
-		GSOutput element;
-		element.pos = input[i];
-		output.Append(element);
-	}
+	float w1 = p1.w;
+
+	float3 norm = points[0].norm;
+
+	//float3 line1 = p1 - p0;
+	//float3 dir = normalize(line1);
+
+	p0.xyz /= p0.w;
+	p1.xyz /= p1.w;
+
+	// Scale to window aspect ratio
+	float3 ratio = float3(RenderTargetSize.y, RenderTargetSize.x, 0);
+	ratio = normalize(ratio);
+
+	float3 unit_z = normalize(float3(0, 0, -1));
+
+	float3 normal = normalize(cross(unit_z, norm) * ratio);
+
+	float width = 0.01;
+
+	GSOutput v[4];
+
+	float3 dir_offset = norm * ratio * width;
+	float3 normal_scaled = normal * ratio * width;
+
+	float3 p0_ex = p0 - dir_offset;
+	float3 p1_ex = p1 + dir_offset;
+
+	v[0].pos = float4(p0_ex - normal_scaled, 1) * w0;
+	v[0].color = points[0].color;
+
+	v[1].pos = float4(p0_ex + normal_scaled, 1) * w0;
+	v[1].color = points[0].color;
+
+	v[2].pos = float4(p1_ex + normal_scaled, 1) * w1;
+	v[2].color = points[1].color;
+
+	v[3].pos = float4(p1_ex - normal_scaled, 1) * w1;
+	v[3].color = points[1].color;
+
+	output.Append(v[2]);
+	output.Append(v[1]);
+	output.Append(v[0]);
+
+	output.RestartStrip();
+
+	output.Append(v[3]);
+	output.Append(v[2]);
+	output.Append(v[0]);
+
+	output.RestartStrip();
 }

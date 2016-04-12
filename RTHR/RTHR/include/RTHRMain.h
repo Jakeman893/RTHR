@@ -5,6 +5,7 @@
 #include "FpsTextRenderer.h"
 #include "SimpleMath.h"
 #include "VertexTypes.h"
+#include "ConstantBuffer.h"
 #ifdef _DEBUG
 	#include "TextConsole.h"
 #endif // DEBUG
@@ -20,6 +21,17 @@ using std::make_unique;
 // Renders Direct2D and 3D content on the screen.
 namespace RTHR
 {
+	struct MatrixContants
+	{
+		Vector3 eyePosition;
+		Matrix world;
+		XMVECTOR worldInverseTranspose[3];
+		Matrix worldViewProj;
+		Vector2 renderTargetSize;
+	};
+
+	static_assert((sizeof(MatrixContants) % 16) == 0, "Constant buffer must be 16 bit aligned.");
+
 	class RTHRMain : public DX::IDeviceNotify
 	{
 	public:
@@ -34,23 +46,29 @@ namespace RTHR
 		virtual void OnDeviceRestored();
 
 	private:
+		int dirtyFlags;
+
 		// The GPU device
-		shared_ptr<DeviceResources> m_deviceResources;
+		shared_ptr<DeviceResources> deviceResources;
 
 		// TODO: Replace with your own content renderers.
-		unique_ptr<SampleFpsTextRenderer> m_fpsTextRenderer;
+		unique_ptr<SampleFpsTextRenderer> fpsTextRenderer;
 
 		// Rendering loop timer.
-		DX::StepTimer m_timer;
+		DX::StepTimer stepTimer;
 
 		// The hair object
-		unique_ptr<Hair> m_hair;
+		unique_ptr<Hair> hairObj;
 
-		// The world, view and projection matrices
-		Matrix m_world;
-		Matrix m_view;
-		Matrix m_proj;
+		Vector3 eyePos;
 
-		Vector3 eye;
+		/**************************************************************/
+		/*Effect Structures********************************************/
+		/**************************************************************/
+		// Used for eye, world, view, projection matrices
+		EffectMatrices matrices;
+
+		// Constant buffer
+		unique_ptr<ConstantBuffer<MatrixContants>> constMatrices;
 	};
 }

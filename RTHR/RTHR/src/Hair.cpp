@@ -17,29 +17,41 @@ namespace RTHR {
 		m_width = width;
 		m_length = length;
 		type = aType;
-		m_device = device;
+		deviceResources = device;
 
-		matrices = EffectMatrices();
-		states = make_unique<CommonStates>(m_device->GetD3DDevice());
+		states = make_unique<CommonStates>(deviceResources->GetD3DDevice());
 
 		CreateDeviceDependentResources();
 	}
 
+	/********************************************************************************************************/
+	/*Getter for hair length*********************************************************************************/
+	/********************************************************************************************************/
 	int Hair::getLength()
 	{
 		return m_length;
 	}
 
+	/********************************************************************************************************/
+	/*Getter for hair width**********************************************************************************/
+	/********************************************************************************************************/
 	int Hair::getWidth()
 	{
 		return m_width;
 	}
 
+	/********************************************************************************************************/
+	/*Getter for wisp count**********************************************************************************/
+	/********************************************************************************************************/
 	int Hair::getWispCount()
 	{
 		return m_wispCount;
 	}
 
+
+	/********************************************************************************************************/
+	/*Set Wisp Function**************************************************************************************/
+	/********************************************************************************************************/
 	void Hair::setWispCount(uint16 count)
 	{
 		//Reduces chance of wisp count being a drain on resources
@@ -50,7 +62,9 @@ namespace RTHR {
 	}
 
 
-	
+	/********************************************************************************************************/
+	/*Hair Strand Generate Function**************************************************************************/
+	/********************************************************************************************************/
 	void Hair::genStrands(const shared_ptr<VertexCollection> vert)
 	{
 #pragma region Hair Extrusion		
@@ -112,53 +126,47 @@ namespace RTHR {
 		indxData.SysMemPitch = 0;
 		indxData.SysMemSlicePitch = 0;
 		
-		HRESULT hr = m_device->GetD3DDevice()->CreateBuffer(&vertBufferDesc, &initData, &strandsVB);
+		HRESULT hr = deviceResources->GetD3DDevice()->CreateBuffer(&vertBufferDesc, &initData, &strandsVB);
 		
 		if (FAILED(hr))
 			throw exception("Creation of the strand vertex buffer failed.");
 
-		DirectX::SetDebugObjectName(strandsVB.Get(), "Hair");
+		DirectX::SetDebugObjectName(strandsVB.Get(), "HairVertex");
 
-		hr = m_device->GetD3DDevice()->CreateBuffer(&indxBufDesc, &indxData, &strandsIB);
+		hr = deviceResources->GetD3DDevice()->CreateBuffer(&indxBufDesc, &indxData, &strandsIB);
 
 		if (FAILED(hr))
 			throw exception("Creation of strand index buffer failed.");
 
-		DirectX::SetDebugObjectName(strandsIB.Get(), "Hair");
+		DirectX::SetDebugObjectName(strandsIB.Get(), "HairIndex");
 
 #pragma endregion
 	}
 
-	void Hair::Draw(Matrix world, Matrix view, Matrix proj, Vector3 eye, FXMVECTOR color,
+
+/********************************************************************************************************/
+/*Draw Function******************************************************************************************/
+/********************************************************************************************************/
+	void Hair::Draw(EffectMatrices* wordViewProj, Vector3 eye, ID3D11Buffer** constMatricesBuf, FXMVECTOR color,
 					ID3D11ShaderResourceView* texture, bool wireframe, std::function<void()> setCustomState)
 	{
 		if (!initDone)
 			return;
 
-		m_geometry->Draw(world, view, proj, color, texture, wireframe, setCustomState);
+		m_geometry->Draw(wordViewProj->world, wordViewProj->view, wordViewProj->projection, color, texture, wireframe, setCustomState);
 
-		auto context = m_device->GetD3DDeviceContext();
+		auto context = deviceResources->GetD3DDeviceContext();
 		dirtyFlags = EffectDirtyFlags::WorldViewProj;
 #pragma region Update Constant Buffer
 		HairEffectConstants update = HairEffectConstants();
 		update.diffuseColor = color;
-		update.eyePosition = eye;
-		update.world = world;
 
-		XMMATRIX worldViewProjConstant;
-
-		matrices.world = world;
-		matrices.view = view;
-		matrices.projection = proj;
-		matrices.SetConstants(dirtyFlags, worldViewProjConstant);
-
-		update.worldViewProj = worldViewProjConstant;
-
-		constBuf->SetData(context, update);
+		constHairParams->SetData(context, update);
 
 #pragma endregion
 #pragma region Draw Hair
 
+#pragma region Set Input Layout and Topology
 		UINT stride = sizeof(VertexPositionNormalColor);
 		UINT offset = 0;
 
@@ -170,16 +178,12 @@ namespace RTHR {
 			&offset
 			);
 
-		context->IASetIndexBuffer(
-			strandsIB.Get(),
-			DXGI_FORMAT_R16_UINT,
-			0
-			);
-
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_LINESTRIP);
 
 		context->IASetInputLayout(inputLayout.Get());
+#pragma endregion
 
+#pragma region Attach shaders with Constant Buffers
 		//Attach vertex shader
 		context->VSSetShader(
 			strandsVS.Get(),
@@ -187,51 +191,82 @@ namespace RTHR {
 			0
 			);
 
-		context->VSSetConstantBuffers1(
+		context->VSSetConstantBuffers(
 			0,
 			1,
-			constBuf->GetBufferAddress(),
-			nullptr,
-			nullptr
+			constMatricesBuf
 			);
 
-		//Attach pixel shader
+		context->VSSetConstantBuffers(
+			1,
+			1,
+			constHairParams->GetBufferAddress()
+			);
+
+		// Attach pixel shader
 		context->PSSetShader(
 			strandsPS.Get(),
 			nullptr,
 			0
 			);
 
+		// Set pixel shader sampler
+		auto samplerState = states->LinearWrap();
+		context->PSSetSamplers(0, 1, &samplerState);
+
+		// Attach geometry shader
+		context->GSSetShader(
+			strandsGS.Get(),
+			nullptr,
+			0
+		);
+
+		// Set constant buffer
+		context->GSSetConstantBuffers(
+			0,
+			1,
+			constMatricesBuf
+		);
+#pragma endregion
+
 #pragma region Rasterizer/DepthStencil/Blend/Sampler States
 
 		// Sets the blend state of the primitive to be drawn (hair)
-		context->OMSetBlendState(states->Additive(), Colors::Black, 0xFFFFFFFF);
+		context->OMSetBlendState(states->AlphaBlend(), Colors::Black, 0xFFFFFFFF);
 		// Sets the depth stencil state
 		context->OMSetDepthStencilState(states->DepthDefault(), 0);
 		// Sets the rasterizer state
 		context->RSSetState(states->Wireframe());
-
-		auto samplerState = states->LinearWrap();
-		context->PSSetSamplers(0, 1, &samplerState);
-
 #pragma endregion
 
 		// Draw
 		context->Draw(vertexCount, 0);
+
+		context->GSSetShader(
+			nullptr,
+			nullptr,
+			0
+		);
 #pragma endregion
 	}
 
+
+/********************************************************************************************************/
+/*Initialization Function********************************************************************************/
+/********************************************************************************************************/
 	void Hair::CreateDeviceDependentResources()
 	{
 		//Load Shaders
 		auto loadVSTask = DX::ReadDataAsync(VS);
 		auto loadPSTask = DX::ReadDataAsync(PS);
+		auto loadGSTask = DX::ReadDataAsync(GS);
+		auto loadCSTask = DX::ReadDataAsync(CS);
 
 #pragma region Vertex Shader
 		//After vertex shader file loaded create shader and input layout
 		auto createVSTask = loadVSTask.then([this](const std::vector<byte>& fileData) {
 			DX::ThrowIfFailed(
-				m_device->GetD3DDevice()->CreateVertexShader(
+				deviceResources->GetD3DDevice()->CreateVertexShader(
 					&fileData[0],
 					fileData.size(),
 					nullptr,
@@ -240,7 +275,7 @@ namespace RTHR {
 				);
 
 			DX::ThrowIfFailed(
-				m_device->GetD3DDevice()->CreateInputLayout(
+				deviceResources->GetD3DDevice()->CreateInputLayout(
 					VertexPositionNormalColor::InputElements,
 					VertexPositionNormalColor::InputElementCount,
 					&fileData[0],
@@ -255,7 +290,7 @@ namespace RTHR {
 		auto createPSTask = loadPSTask.then([this](const std::vector<byte>& fileData)
 		{
 			DX::ThrowIfFailed(
-				m_device->GetD3DDevice()->CreatePixelShader(
+				deviceResources->GetD3DDevice()->CreatePixelShader(
 					&fileData[0],
 					fileData.size(),
 					nullptr,
@@ -266,27 +301,44 @@ namespace RTHR {
 #pragma endregion
 
 #pragma region Geometry Shader
-		//TODO: Load a geometry shader
+
+		auto createGSTask = loadGSTask.then([this](const std::vector<byte>& fileData)
+		{
+			DX::ThrowIfFailed(
+				deviceResources->GetD3DDevice()->CreateGeometryShader(
+					&fileData[0],
+					fileData.size(),
+					nullptr,
+					&strandsGS
+				)
+			);
+		});
+
 #pragma endregion
 
 #pragma region Compute Shader
-		//TODO: Load a compute shader
+
+		//auto createCSTask = loadCSTask.then([this](const std::vector<byte>& fileData)
+		//{
+		//	DX::ThrowIfFailed(
+		//		deviceResources->GetD3DDevice()->CreateComputeShader(
+		//			&fileData[0],
+		//			fileData.size(),
+		//			nullptr,
+		//			&strandsCS
+		//		)
+		//	);
+		//});
 #pragma endregion
 
 #pragma region Constant Buffer
 
-		matrices.projection = Matrix::Identity;
-		matrices.view = Matrix::Identity;
-		matrices.world = Matrix::Identity;
-
-		auto a = sizeof(HairEffectConstants);
-
-		constBuf = make_unique<ConstantBuffer<HairEffectConstants>>(m_device->GetD3DDevice());
+		constHairParams = make_unique<ConstantBuffer<HairEffectConstants>>(deviceResources->GetD3DDevice());
 
 #pragma endregion
 
 #pragma region Geometry Intialization
-		ID3D11DeviceContext* context = m_device->GetD3DDeviceContext();
+		ID3D11DeviceContext* context = deviceResources->GetD3DDeviceContext();
 
 		switch (type)
 		{
@@ -347,6 +399,6 @@ namespace RTHR {
 		strandsIB.Reset();
 		inputLayout.Reset();
 		m_geometry.reset();
-		constBuf.reset();
+		constHairParams.reset();
 	}
 }
