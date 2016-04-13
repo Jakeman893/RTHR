@@ -236,7 +236,7 @@ namespace RTHR {
 		// Sets the depth stencil state
 		context->OMSetDepthStencilState(states->DepthDefault(), 0);
 		// Sets the rasterizer state
-		context->RSSetState(states->Wireframe());
+		context->RSSetState(states->CullCounterClockwise());
 #pragma endregion
 
 		// Draw

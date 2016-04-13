@@ -2,7 +2,7 @@
 
 [maxvertexcount(6)]
 void main(
-	line GSInput points[2], 
+	line GSInput points[2],
 	inout TriangleStream< GSOutput > output
 )
 {
@@ -25,7 +25,7 @@ void main(
 
 	float3 normal = normalize(cross(unit_z, dir) * ratio);
 
-	float width = 0.005;
+	float width = 0.01;
 
 	GSOutput v[4];
 
@@ -41,10 +41,10 @@ void main(
 	v[1].pos = float4(p0_ex + normal_scaled, 1) * w0;
 	v[1].color = points[0].color;
 
-	v[2].pos = float4(p1_ex + normal_scaled, 1) * w1;
+	v[2].pos = float4(p1_ex + normal_scaled * length(points[1].norm), 1) * w1;
 	v[2].color = points[1].color;
 
-	v[3].pos = float4(p1_ex - normal_scaled, 1) * w1;
+	v[3].pos = float4(p1_ex - normal_scaled * length(points[1].norm), 1) * w1;
 	v[3].color = points[1].color;
 
 	output.Append(v[2]);
