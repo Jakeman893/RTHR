@@ -80,13 +80,13 @@ namespace RTHR {
 		{
 			Vector3 direction = vert->at(i).normal;
 			Vector3 position = vert->at(i).position;
-			strands.push_back(VertexPositionNormalColor(position, direction, Colors::Brown));
-			for (uint32_t j = 1; j < m_length; j++)
+			for (uint32_t j = 0; j < m_length-1; j++)
 			{
-				//In the future, this should use UV texture map in order to paint length weight onto the object
-				position += direction;
 				strands.push_back(VertexPositionNormalColor(position, direction, Colors::Brown));
+				//In the future, this should use UV texture map in order to paint length weight onto the object
+				position += direction * 0.1f;
 			}
+			strands.push_back(VertexPositionNormalColor(position, Vector3::Zero, Colors::Brown));
 			roots[i] = strands.size();
 		}
 

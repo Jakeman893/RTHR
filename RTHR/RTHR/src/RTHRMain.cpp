@@ -31,7 +31,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 										Vector3::Zero,
 										Vector3::UnitY);
 
-	hairObj = make_unique<Hair>(GeometryType::SPHERE, deviceResources, 1.0f, 4, 2);
+	hairObj = make_unique<Hair>(GeometryType::SPHERE, deviceResources, 1.0f, 4, 5);
 }
 
 RTHRMain::~RTHRMain()

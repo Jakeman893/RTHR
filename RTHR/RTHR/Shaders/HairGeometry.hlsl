@@ -12,10 +12,7 @@ void main(
 	float w0 = p0.w;
 	float w1 = p1.w;
 
-	float3 norm = points[0].norm;
-
-	//float3 line1 = p1 - p0;
-	//float3 dir = normalize(line1);
+	float3 dir = points[0].norm;
 
 	p0.xyz /= p0.w;
 	p1.xyz /= p1.w;
@@ -26,13 +23,13 @@ void main(
 
 	float3 unit_z = normalize(float3(0, 0, -1));
 
-	float3 normal = normalize(cross(unit_z, norm) * ratio);
+	float3 normal = normalize(cross(unit_z, dir) * ratio);
 
-	float width = 0.01;
+	float width = 0.005;
 
 	GSOutput v[4];
 
-	float3 dir_offset = norm * ratio * width;
+	float3 dir_offset = dir * ratio * width;
 	float3 normal_scaled = normal * ratio * width;
 
 	float3 p0_ex = p0 - dir_offset;
