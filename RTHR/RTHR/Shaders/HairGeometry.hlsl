@@ -21,9 +21,9 @@ void main(
 	float3 ratio = float3(RenderTargetSize.y, RenderTargetSize.x, 0);
 	ratio = normalize(ratio);
 
-	float3 unit_z = normalize(float3(0, 0, -1));
+	float3 eyeVec = normalize(-EyePosition);
 
-	float3 normal = normalize(cross(unit_z, dir) * ratio);
+	float3 normal = normalize(cross(eyeVec, dir) * ratio);
 
 	float width = 0.01;
 

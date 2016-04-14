@@ -23,24 +23,12 @@
     <Filter Include="Source">
       <UniqueIdentifier>{4a25e68f-b541-43c0-b2cc-ddee4a0944d3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Rendering Classes">
-      <UniqueIdentifier>a4cd06f6-ca9e-4e8f-804c-1578bc9a1cad</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering Classes\Shaders">
+    <Filter Include="Shaders">
       <UniqueIdentifier>{0c57bb37-1805-4f2a-93c9-5815f9b7b15d}</UniqueIdentifier>
       <Extensions>.hlsl</Extensions>
     </Filter>
-    <Filter Include="Rendering Classes\FPS Text Renderer">
-      <UniqueIdentifier>{f5ed7a72-0db7-41e4-89be-de8b73426a7b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Rendering Classes\Sample Scene">
-      <UniqueIdentifier>{e8d5c965-ab19-41c5-b16a-e847c3e7bd65}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\FpsTextRenderer.cpp">
-      <Filter>Rendering Classes\FPS Text Renderer</Filter>
-    </ClCompile>
     <ClCompile Include="include\Common\DeviceResources.cpp">
       <Filter>Common</Filter>
     </ClCompile>
@@ -59,11 +47,11 @@
     <ClCompile Include="src\TextConsole.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="src\FpsTextRenderer.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\FpsTextRenderer.h">
-      <Filter>Rendering Classes\FPS Text Renderer</Filter>
-    </ClInclude>
     <ClInclude Include="include\Common\DeviceResources.h">
       <Filter>Common</Filter>
     </ClInclude>
@@ -89,6 +77,9 @@
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="include\GeometricTypes.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\FpsTextRenderer.h">
       <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
@@ -124,27 +115,27 @@
       <Filter>Assets</Filter>
     </None>
     <None Include="Shaders\HairHeader.hlsli">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\SamplePixelShader.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SampleVertexShader.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairPixel.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairVertex.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairGeometry.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\HairCompute.hlsl">
-      <Filter>Rendering Classes\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

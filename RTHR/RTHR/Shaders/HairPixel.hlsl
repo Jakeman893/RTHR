@@ -10,5 +10,6 @@ struct GSOutput
 // A pass-through function for the (interpolated) color data.
 float4 main(GSOutput input) : SV_TARGET
 {
+	//TODO: Add phong model here
 	return float4(input.color, 1.0f);
 }

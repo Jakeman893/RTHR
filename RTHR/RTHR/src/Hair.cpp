@@ -155,8 +155,8 @@ namespace RTHR {
 
 		m_geometry->Draw(wordViewProj->world, wordViewProj->view, wordViewProj->projection, color, texture, wireframe, setCustomState);
 
+
 		auto context = deviceResources->GetD3DDeviceContext();
-		dirtyFlags = EffectDirtyFlags::WorldViewProj;
 #pragma region Update Constant Buffer
 		HairEffectConstants update = HairEffectConstants();
 		update.diffuseColor = color;
@@ -242,6 +242,7 @@ namespace RTHR {
 		// Draw
 		context->Draw(vertexCount, 0);
 
+		// Unset geometry shader
 		context->GSSetShader(
 			nullptr,
 			nullptr,
