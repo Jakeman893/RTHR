@@ -25,7 +25,7 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 
 	matrices.world = Matrix::Identity;
 
-	eyePos = Vector3(0, 0, 3);
+	eyePos = Vector3(0, 0, 5);
 
 	matrices.view = Matrix::CreateLookAt(eyePos,
 										Vector3::Zero,

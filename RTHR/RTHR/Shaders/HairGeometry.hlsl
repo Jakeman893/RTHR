@@ -25,7 +25,7 @@ void main(
 
 	float3 normal = normalize(cross(eyeVec, dir) * ratio);
 
-	float width = 0.01;
+	float width = 0.005;
 
 	GSOutput v[4];
 
