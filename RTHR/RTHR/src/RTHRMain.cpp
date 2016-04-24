@@ -4,13 +4,13 @@
 
 // Loads and initializes application assets when the application is loaded.
 RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) :
-	m_deviceResources(deviceResources)
+	deviceResources(deviceResources)
 {
 	// Register to be notified if the Device is lost or recreated
-	m_deviceResources->RegisterDeviceNotify(this);
+	deviceResources->RegisterDeviceNotify(this);
 
 	// TODO: Replace this with your app's content initialization.
-	m_fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(m_deviceResources));
+	fpsTextRenderer = std::unique_ptr<SampleFpsTextRenderer>(new SampleFpsTextRenderer(deviceResources));
 
 #ifdef _DEBUG
 	m_console->RestoreDevice(deviceResources->GetD3DDeviceContext(), L"Assets\\Fonts\\consolas.spritefont");
@@ -23,43 +23,64 @@ RTHRMain::RTHRMain(const std::shared_ptr<DX::DeviceResources>& deviceResources) 
 	m_console->WriteLine(L"Making geometry");
 #endif
 
-	m_hair = make_unique<Hair>(GeometryType::SPHERE, m_deviceResources, 1.0f, 4, 0);
+	matrices.world = Matrix::Identity;
 
-	m_world = Matrix::Identity;
+	eyePos = Vector3(0, 0, 5);
 
-//	m_view = Matrix::Identity;
+	matrices.view = Matrix::CreateLookAt(eyePos,
+										Vector3::Zero,
+										Vector3::UnitY);
 
-	m_view = Matrix::CreateLookAt(Vector3(1, 1, 0),
-		Vector3::Zero,
-		Vector3::UnitY);
-
+	hairObj = make_unique<Hair>(GeometryType::SPHERE, deviceResources, 1.0f, 4, 5);
 }
 
 RTHRMain::~RTHRMain()
 {
 	// Deregister device notification
-	m_deviceResources->RegisterDeviceNotify(nullptr);
+	deviceResources->RegisterDeviceNotify(nullptr);
 }
 
 // Updates application state when the window size changes (e.g. device orientation change)
 void RTHRMain::CreateWindowSizeDependentResources() 
 {
 	// TODO: Replace this with the size-dependent initialization of your app's content.
-	auto size = m_deviceResources->GetOutputSize();
+	auto size = deviceResources->GetOutputSize();
+
 #ifdef _DEBUG
 	m_console->SetWindow(SimpleMath::Viewport::ComputeTitleSafeArea(size.Width, size.Height));
 #endif
-	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, (size.Width/size.Height), FLT_EPSILON, 10.f);
+
+
+	matrices.projection = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f, (size.Width/size.Height), FLT_EPSILON, 10.f);
+	constMatrices = make_unique<ConstantBuffer<MatrixContants>>(deviceResources->GetD3DDevice());
+	
+	dirtyFlags = EffectDirtyFlags::WorldViewProj;
 }
 
 // Updates the application state once per frame.
 void RTHRMain::Update() 
 {
 	// Update scene objects.
-	m_timer.Tick([&]()
+	stepTimer.Tick([&]()
 	{
+		// If the world view projection matrix is dirty and needs to be cleaned
+		if (dirtyFlags & EffectDirtyFlags::WorldViewProj)
+		{
+			XMMATRIX worldViewProjConstant;
+			matrices.SetConstants(dirtyFlags, worldViewProjConstant);
+
+			MatrixContants update = MatrixContants();
+			update.eyePosition = eyePos;
+			update.world = matrices.world;
+			update.worldViewProj = worldViewProjConstant;
+			auto size = deviceResources->GetOutputSize();
+			update.renderTargetSize = Vector2(size.Width, size.Height);
+
+			constMatrices->SetData(deviceResources->GetD3DDeviceContext(), update);
+		}
+
 		// TODO: Replace this with your app's content update functions.
-		m_fpsTextRenderer->Update(m_timer);
+		fpsTextRenderer->Update(stepTimer);
 	});
 }
 
@@ -69,36 +90,35 @@ bool RTHRMain::Render()
 {
 #pragma region RenderInit
 	// Don't try to render anything before the first Update.
-	if (m_timer.GetFrameCount() == 0)
+	if (stepTimer.GetFrameCount() == 0)
 	{
 		return false;
 	}
 
-	auto context = m_deviceResources->GetD3DDeviceContext();
+	auto context = deviceResources->GetD3DDeviceContext();
 
 	// Reset the viewport to target the whole screen.
-	auto viewport = m_deviceResources->GetScreenViewport();
+	auto viewport = deviceResources->GetScreenViewport();
 	context->RSSetViewports(1, &viewport);
 
 	// Reset render targets to the screen.
-	ID3D11RenderTargetView *const targets[1] = { m_deviceResources->GetBackBufferRenderTargetView() };
-	context->OMSetRenderTargets(1, targets, m_deviceResources->GetDepthStencilView());
+	ID3D11RenderTargetView *const targets[1] = { deviceResources->GetBackBufferRenderTargetView() };
+	context->OMSetRenderTargets(1, targets, deviceResources->GetDepthStencilView());
 
 	// Clear the back buffer and depth stencil view.
-	context->ClearRenderTargetView(m_deviceResources->GetBackBufferRenderTargetView(), DirectX::Colors::CornflowerBlue);
-	context->ClearDepthStencilView(m_deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	context->ClearRenderTargetView(deviceResources->GetBackBufferRenderTargetView(), Colors::MintCream);
+	context->ClearDepthStencilView(deviceResources->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 #pragma endregion
 
 #pragma region Render Calls
 	// Render the scene objects.
-	// TODO: Replace this with your app's content rendering functions.
-	m_fpsTextRenderer->Render();
-
-	m_hair->Draw(m_world, m_view, m_proj);
+	fpsTextRenderer->Render();
 
 #ifdef _DEBUG
 	m_console->Render();
 #endif
+
+	hairObj->Draw(&matrices, eyePos, constMatrices->GetBufferAddress(), Colors::RosyBrown);
 
 #pragma endregion
 	return true;
@@ -107,22 +127,22 @@ bool RTHRMain::Render()
 // Notifies renderers that device resources need to be released.
 void RTHRMain::OnDeviceLost()
 {
-	m_hair->Reset();
+	hairObj->Reset();
 #ifdef _DEBUG
 	m_console->WriteLine(L"Device Lost");
 	m_console->ReleaseDevice();
 #endif
-	m_fpsTextRenderer->ReleaseDeviceDependentResources();
+	fpsTextRenderer->ReleaseDeviceDependentResources();
 }
 
 // Notifies renderers that device resources may now be recreated.
 void RTHRMain::OnDeviceRestored()
 {
 #ifdef _DEBUG
-	m_console->RestoreDevice(m_deviceResources->GetD3DDeviceContext(), L"../../Fonts/consolas.spritefont");
+	m_console->RestoreDevice(deviceResources->GetD3DDeviceContext(), L"../../Fonts/consolas.spritefont");
 	m_console->WriteLine(L"Device Restored");
 #endif
-	m_fpsTextRenderer->CreateDeviceDependentResources();
-	m_hair->CreateDeviceDependentResources();
+	fpsTextRenderer->CreateDeviceDependentResources();
+	hairObj->CreateDeviceDependentResources();
 	CreateWindowSizeDependentResources();
 }

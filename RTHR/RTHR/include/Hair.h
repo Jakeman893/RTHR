@@ -6,17 +6,20 @@
 #include "Common\DeviceResources.h"
 #include "Common\DirectXHelper.h"
 #include "DirectXHelpers.h"
-
-#include "Common\ShaderStructures.h"
+#include "EffectCommon.h"
 
 #include "GeometricTypes.h"
 #include "PrimitiveBatch.h"
-#include "Effects.h"
+#include "HairEffect.h"
 #include "CommonStates.h"
+
+#include "ConstantBuffer.h"
 
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
+
+using Microsoft::WRL::ComPtr;
 
 namespace RTHR
 {
@@ -30,6 +33,19 @@ namespace RTHR
 		Vector2 textCoord;
 		int length;
 	};
+
+	struct HairEffectConstants
+	{
+		Color diffuseColor;
+		//XMVECTOR emissiveColor;
+		//XMVECTOR specularColorAndPower;
+
+		//XMVECTOR lightDirection[3];
+		//XMVECTOR lightDiffuseColor[3];
+		//XMVECTOR lightSpecularColor[3];
+	};
+
+	static_assert((sizeof(HairEffectConstants) % 16) == 0, "Constant Buffer must be 16 bit aligned.");
 
 	// The hair class that allows for the additon of a hair scalp to the scene with realistic hair
 	// simulated
@@ -50,7 +66,7 @@ namespace RTHR
 		void setWispCount(uint16 count);
 
 		// The rendering function to be called whenever a rendering call is made to the app
-		void Draw(FXMMATRIX world, CXMMATRIX view, CXMMATRIX proj, 
+		void Draw(EffectMatrices* worldViewProj, Vector3 eye, ID3D11Buffer** constMatricesBuf,
 					FXMVECTOR color = Colors::White, ID3D11ShaderResourceView* texture = (ID3D11ShaderResourceView*) nullptr,
 					bool wireframe = false, std::function<void()> setCustomState = nullptr);
 
@@ -62,6 +78,8 @@ namespace RTHR
 
 	private:
 		unique_ptr<CommonStates> states;
+
+		int dirtyFlags;
 
 		bool initDone = false;
 
@@ -79,9 +97,6 @@ namespace RTHR
 		// Extrudes the hair strands to the specified length over the GeometricPrimitive's vertices
 		void genStrands(const shared_ptr<VertexCollection> vert);
 
-		// Model View Projection
-		BasicEffectConstants constParams;
-
 		/**************************************************************/
 		/*Under hair geometry properties*******************************/
 		/**************************************************************/
@@ -94,27 +109,29 @@ namespace RTHR
 		/*Device Specific Pointers*************************************/
 		/**************************************************************/
 		//The device
-		shared_ptr<DX::DeviceResources> m_device;
+		shared_ptr<DX::DeviceResources> deviceResources;
 		//Vertex Buffer
-		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsVB;
+		ComPtr<ID3D11Buffer> strandsVB;
 		//Index Buffer
-		Microsoft::WRL::ComPtr<ID3D11Buffer> strandsIB;
-		//Model view projection buffer
-		Microsoft::WRL::ComPtr<ID3D11Buffer> paramsConstant;
+		ComPtr<ID3D11Buffer> strandsIB;
+		// Constant buffer
+		unique_ptr<ConstantBuffer<HairEffectConstants>> constHairParams;
 
-		Microsoft::WRL::ComPtr<ID3D11VertexShader> strandsVS;
-		Microsoft::WRL::ComPtr<ID3D11PixelShader> strandsPS;
-		//Microsoft::WRL::ComPtr<ID3D11GeometryShader> strandsGS;
-		//Microsoft::WRL::ComPtr<ID3D11ComputeShader> strandsCS;
-
-		Microsoft::WRL::ComPtr<ID3D11InputLayout> inputLayout;
+		/*************************************************************/
+		/*Shaders*****************************************************/
+		/*************************************************************/
+		ComPtr<ID3D11VertexShader> strandsVS;
+		ComPtr<ID3D11PixelShader> strandsPS;
+		ComPtr<ID3D11GeometryShader> strandsGS;
+		ComPtr<ID3D11ComputeShader> strandsCS;
+		ComPtr<ID3D11InputLayout> inputLayout;
 
 		/**************************************************************/
 		/*Shader Strings for Loading***********************************/
 		/**************************************************************/
 		const wstring VS = L"HairVertex.cso";
 		const wstring PS = L"HairPixel.cso";
-		//const wstring GS = L"GeometryShader.cso";
-		//const wstring CS = L"ComputeShader.cso";
+		const wstring GS = L"HairGeometry.cso";
+		const wstring CS = L"HairGeometry.cso";
 	};
 }
